@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2013-02-13T16:56:48+01:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello World]]></title>
+    <link href="http://snippyhollow.github.com/blog/2013/02/13/hello-world/"/>
+    <updated>2013-02-13T16:43:00+01:00</updated>
+    <id>http://snippyhollow.github.com/blog/2013/02/13/hello-world</id>
+    <content type="html"><![CDATA[<p>Hello, world!</p>
+]]></content>
+  </entry>
+  
+</feed>

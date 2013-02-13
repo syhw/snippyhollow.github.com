@@ -2,10 +2,10 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://SnippyHolloW.github.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://snippyhollow.github.com
+title: Exchangeable random experiments
+subtitle: blog += 1
+author: syhw
 simple_search: http://google.com/search
 description:
 

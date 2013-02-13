@@ -1,0 +1,6 @@
+rake new_post["TITLE"]
+vim ......
+rake generate
+rake deploy
+git add & commit ......
+git push origin source

@@ -4,7 +4,7 @@
   <title><![CDATA[Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2013-03-10T13:21:20+01:00</updated>
+  <updated>2013-03-10T16:29:53+01:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -18,7 +18,7 @@
     <link href="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/"/>
     <updated>2013-03-08T18:58:00+01:00</updated>
     <id>http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability</id>
-    <content type="html"><![CDATA[<p>In which we look at two pragmatic hacks that lead to the Bayesian theory of probabilities, when pushed further and added as constraints.</p>
+    <content type="html"><![CDATA[<p>In which we look at two pragmatic hacks that lead to the Bayesian approach of probabilities, when pushed further and added as constraints.</p>
 
 <h2 id="coinflips">Coinflips</h2>
 

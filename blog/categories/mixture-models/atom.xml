@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mixture models | Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/blog/categories/mixture-models/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2013-03-10T19:09:37+01:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[syhw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models]]></title>
+    <link href="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/"/>
+    <updated>2013-03-10T15:44:00+01:00</updated>
+    <id>http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models</id>
+    <content type="html"><![CDATA[<p>I really enjoyed the pedagogy of <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">Edwin Chen’s introduction to infinite mixture models</a>, but I was a little disappointed that it does not go as far as presenting the details of the Dirichlet process Gaussian mixture model (DPGMM), as he uses <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">sklearn’s variational Bayes DPGMM implementation</a>. </p>
+
+<p>For this reason, I will try and give here sufficient information to implement a DPGMM with collapsed Gibbs sampling.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+<p>On Dirichlet processes, Chinese Restaurant processes, Indian Buffet processes, there is <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">the excellent blog post by Edwin Chen</a>. Another excellent introduction to Dirichlet processes is provided by <a href="http://www.ee.washington.edu/research/guptalab/publications/UWEETR-2010-0006.pdf">Frigyik, Kapila and Gupta</a>.</p>
+
+<p>If you lack some knowledge about clustering or density estimation (unsupervised learning), you can read Chapters 20 (p. 284) to (at least) 22 of <a href="http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521642981&amp;linkCode=as2&amp;tag=syhwsblog-20">MacKay’s ITILA</a>, that you can find as a <a href="http://www.inference.phy.cam.ac.uk/itila/book.html">free ebook</a>; or chapter 9 of <a href="http://www.amazon.com/gp/product/0387310738/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0387310738&amp;linkCode=as2&amp;tag=syhwsblog-20">Bishop’s PRML</a>. As a refresher, the <a href="https://en.wikipedia.org/wiki/Mixture_model">Wikipedia article on mixture models</a>, and <a href="http://scikit-learn.org/stable/modules/mixture.html">the sklearn documentation on GMM</a> are more efficient.</p>
+
+<h3 id="dpgmm-the-model">DPGMM: the model</h3>
+
+<p>Let’s say we have $N$ observations and $K$ clusters, $i \in [1\dots N]$ is the indice for the observations, while $k \in [1\dots K]$ is the indice for the clusters.</p>
+
+<p>The generative story of a DPGMM is as follows:</p>
+
+<p>$\pi \sim Stick(\alpha)$ (mixing rates)<br />
+$z_i \sim \pi$ (cluster assignments)<br />
+$\theta_k \sim H(\lambda)$ (parameters)<br />
+$x_i \sim F(\theta_{z_i})$ (values)   </p>
+
+<p>So we have:</p>
+
+<script type="math/tex; mode=display">
+P(x_{1:N}) = \prod_{i=1}^N \sum_{k=1}^K P(x_i|\theta_{z_i}) P(z_i=k)
+</script>
+
+<h3 id="fitting-the-data">Fitting the data</h3>
+<p>Notation: </p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+& z_{-i} = \{z_j | j \neq i\}\\
+& x = x_{1:N}\\
+& k^*\mathrm{\ is\ a\ new\ cluster}\\
+& x_{-i,c} = \{x_j | z_j = c, j \neq i\}\\
+& N_{k,-i} = card(x_{-i,c})
+\end{align}
+ %]]&gt;</script>
+
+<p>Let’s decompose the probability that the observation $i$ belongs to cluster $k$ into its two independent factors:</p>
+
+<script type="math/tex; mode=display">
+P(z_i = k | z_{-i}, x, \alpha, \lambda) \propto P(z_i = k | z_{-i}, \alpha)P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda)
+</script>
+
+<script type="math/tex; mode=display">
+\boxed{P(z_i = k | z_{-i}, \alpha) = \left\{ 
+\begin{array}{l}
+\frac{N_{k,-i}}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{has\ been\ seen\ before}\\
+\frac{\alpha}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{is\ a\ new\ cluster}\\
+\end{array}
+    \right.}
+</script>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) = P(x_i | x_{-i,k}, \lambda) = \frac{P(x_i, x_{-i, k}, \lambda)}{P(x_{-i,k}|\lambda)}
+</script>
+
+<script type="math/tex; mode=display">
+\boxed{P(x_i, x_{-i, k}, \lambda) = \int P(x_i | \theta_k)\left[\prod_{j \neq i, z_j = k}P(x_j | \theta_k)\right] H(\theta_k | \lambda) d\theta_k}
+</script>
+
+<p>is the marginal likelihood of all the data assigned to cluster $k$, including $i$.</p>
+
+<p>If $z_i = k^*$ (new cluster) then:</p>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k^*, z_{-i}, \lambda) = \boxed{P(x_i | \lambda) = \int P(x_i | \theta)H(\theta | \lambda) d\theta}
+</script>
+
+<h3 id="conjugate-priors">Conjugate priors</h3>
+
+<p>Now we should choose $H$ for it to be conjugate to $F$ and have easy to compute parameters posterior. As we want $F$ to be multivariate normal: we can look on <a href="http://en.wikipedia.org/wiki/Conjugate_prior">Wikipedia’s page of conjugate priors</a> under multivariate normal with unknown $\mu$ and $\Sigma$ to see that $H$ should be Normal-inverse-Wishart with prior parameters:</p>
+
+<ul>
+  <li>$\mu_0$ initial mean guess [In my code further, I set it to the mean of whole the dataset.]</li>
+  <li>$\kappa_0$ mean fraction (smoothing parameter) [I set it to 0.]</li>
+  <li>$\nu_0$ degrees of freedom [I set it to the number of dimensions.]</li>
+  <li>$\Psi_0$ pairwise deviation product (matrix) [I set it to $d\times d$ identity matrix.]</li>
+</ul>
+
+<p>This gives us MAP estimates on parameters:</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+& \mu_n = \frac{\kappa_0 \mu_0 + n\tilde{x}}{\kappa_0 +n} = \mu\\
+& \kappa_n = \kappa_0 + n\\
+& \nu_n = \nu_0 + n \\
+& \Psi_n = \Psi_0 + C + \frac{\kappa_0 n}{\kappa_0 + n}(\tilde{x} - \mu_0)(\tilde{x} - \mu_0)^T$\\
+& \Sigma = \frac{\kappa_n + 1}{\kappa_n * (\nu_n - d + 1)}\Psi_n
+\end{align}
+ %]]&gt;</script>
+
+<p>with $\tilde{x}$ the sample mean and $C=\sum_{i=1}^n (x_i-\tilde{x})(x_i-\tilde{x})^T$.</p>
+
+<p>Set $\kappa_{0} = 0$ to have no effect of the prior on the posterior mean. 
+This reduces to MLE estimates if </p>
+
+<script type="math/tex; mode=display">
+\kappa_{0} = 0, \nu_{0} = d, \|\Psi_{0}\| = 0
+</script>
+
+<h3 id="collapsed-gibbs-sampling">Collapsed Gibbs sampling</h3>
+
+<p>Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of <a href="http://www.stat.purdue.edu/~rdutta/24.PDF">Neal’s seminal paper</a>:</p>
+
+<pre><code>while (not converged on mus and sigmas): // or in log-likelihood
+    for each i = 1 : N in random order do:
+        remove x[i]'s sufficient statistics from old cluster z[i]
+        if any cluster is empty, remove it and decrease K
+        for each k = 1 : K do
+            compute P_k(x[i]) = P(x[i] | x[-i]=k)
+            N[k,-i] = dim(x[-i]=k)
+            compute P(z[i]=k | z[-i], Data) = N[k,-i] / (alpha + N - 1)
+        compute P*(x[i]) = P(x[i] | lambda)
+        compute P(z[i]=* | z[-i], Data) = alpha / (alpha + N - 1)
+        normalize P(z[i] | ...)
+        sample z[i] from P(z[i] | ...)
+        add x[i]'s sufficient statistics to new cluster z[i]
+        (possibly increase K)
+</code></pre>
+
+<h3 id="code">Code</h3>
+
+<p>Here is my quick-and-dirty code implementing this version of Gibbs sampling for DPGMM. You may want to comment out scikit-learn if you do not have it installed (I use <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">sklearn’s VB DPGMM</a> as a comparison).</p>
+
+<p><div><script src='https://gist.github.com/5128969.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

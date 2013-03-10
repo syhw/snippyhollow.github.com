@@ -6,7 +6,7 @@ comments: true
 categories: [Bayesian, logic, hacks]
 ---
 
-In which we look at two pragmatic hacks that lead to the Bayesian theory of probabilities, when pushed further and added as constraints.
+In which we look at two pragmatic hacks that lead to the Bayesian approach of probabilities, when pushed further and added as constraints.
 
 ## Coinflips
 

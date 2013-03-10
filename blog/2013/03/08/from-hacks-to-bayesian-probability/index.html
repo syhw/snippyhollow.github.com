@@ -1,24 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Exchangeable random experiments]]></title>
-  <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
-  <link href="http://snippyhollow.github.com/"/>
-  <updated>2013-03-10T13:03:29+01:00</updated>
-  <id>http://snippyhollow.github.com/</id>
-  <author>
-    <name><![CDATA[syhw]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>From hacks to Bayesian probability - Exchangeable random experiments</title>
+  <meta name="author" content="syhw">
 
   
-  <entry>
-    <title type="html"><![CDATA[From hacks to Bayesian probability]]></title>
-    <link href="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/"/>
-    <updated>2013-03-08T18:58:00+01:00</updated>
-    <id>http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability</id>
-    <content type="html"><![CDATA[<h2 id="coinflips">Coinflips</h2>
+  <meta name="description" content="Coinflips Let’s say we have a coin, and we want to decide if it’s fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Exchangeable random experiments" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38472185-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath: [ ['$', '$'] ],
+            displayMath: [ ['$$', '$$']],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        },
+        messageStyle: "none",
+        "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Exchangeable random experiments</a></h1>
+  
+    <h2>blog += 1</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:snippyhollow.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">From Hacks to Bayesian Probability</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-08T18:58:00+01:00" pubdate data-updated="true">Mar 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="coinflips">Coinflips</h2>
 
 <p>Let’s say we have a coin, and we want to decide if it’s fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. With $\mu$ the ratio of heads:</p>
 
@@ -53,13 +151,13 @@ Beta(\mu|a, b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \mu^{a-1}(1-\mu)^{b-1}
 
 <p>Now we can compute again what is the <em>posterior</em> value of $\mu$ knowing the data $D$ and the prior Beta:</p>
 
-<script type="math/tex; mode=display">% &lt;![CDATA[
+<script type="math/tex; mode=display">% <![CDATA[
 
 \begin{align}
 P(\mu | a_0, b_0, D) & \propto P(D|\mu)P(\mu|a_0, b_0)\\
                     & \propto \left( \prod_{n=1}^N \mu^{x_n} (1-\mu)^{1-x_n} \right) Beta(\mu | a_0, b_0)
 \end{align}
- %]]&gt;</script>
+ %]]></script>
 
 <p>Hopefully, the Beta distribution is the conjugate prior for the Bernouilli and binomial distributions, and thus a bit of calculus reduces it to:</p>
 
@@ -102,13 +200,13 @@ P(B|A,C)=\frac{P(A,B|C)}{P(A|C)}\ (Product\ rule)
 
 <p>So now if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B|A)$ (we are 100% sure of A):</p>
 
-<script type="math/tex; mode=display">% &lt;![CDATA[
+<script type="math/tex; mode=display">% <![CDATA[
 
 \begin{align}
 P(B|A) = \frac{\sum_{C\in\{false,true\}} P(B|A,C)P(A)P(C)}{P(A)} & = P(\neg C)P(B|A,\neg C) + P(C)P(B|A,C)\\
 & = 0.2*x(\in [0,1]) + 0.8*1.0 \geq 0.8
 \end{align}
- %]]&gt;</script>
+ %]]></script>
 
 <p>Which means that $B$ has 80% chances to be true by following the strong syllogism of modus ponens, but it can also be true even though $C=false$.</p>
 
@@ -130,7 +228,172 @@ P(B|A) = \frac{\sum_{C\in\{false,true\}} P(B|A,C)P(A)P(C)}{P(A)} & = P(\neg C)P(
 
 <p>If you are interested by learning about plausible reasonning, you can <a href="http://emotion.inrialpes.fr/people/synnaeve/phdthesis/phdthesis.html#x1-590003.2">look at my thesis</a>, or, better yet, read it directly from one of the masters in <a href="http://www.amazon.com/gp/product/0521592712/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521592712&amp;linkCode=as2&amp;tag=syhwsblog-20">Jayne’s Probability Theory: The Logic of Science</a> for which the pre-print is <a href="http://www-biba.inrialpes.fr/Jaynes/prob.html">there</a>.</p>
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-</feed>
+
+<span class="byline author vcard">Posted by <span class="fn">syhw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-08T18:58:00+01:00" pubdate data-updated="true">Mar 8<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bayesian/'>Bayesian</a>, <a class='category' href='/blog/categories/hacks/'>hacks</a>, <a class='category' href='/blog/categories/logic/'>logic</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/" data-via="syhw" data-counturl="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/08/from-hacks-to-bayesian-probability/">From hacks to Bayesian probability</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/SnippyHolloW">@SnippyHolloW</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'SnippyHolloW',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("syhw", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/syhw" class="twitter-follow-button" data-show-count="false">Follow @syhw</a>
+  
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:syhw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "syhw"; //id target for pinboard list
+  var pinboard_count = 5; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - syhw -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Exchangeable random experiments]]></title>
-  <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Bayesian | Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/blog/categories/bayesian/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
   <updated>2013-03-10T13:03:29+01:00</updated>
   <id>http://snippyhollow.github.com/</id>

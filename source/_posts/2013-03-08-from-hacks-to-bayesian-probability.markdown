@@ -6,12 +6,14 @@ comments: true
 categories: [Bayesian, logic, hacks]
 ---
 
+In which we look at two pragmatic hacks that lead to the Bayesian theory of probabilities, when pushed further and added as constraints.
+
 ## Coinflips
 
 Let's say we have a coin, and we want to decide if it's fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. With $\mu$ the ratio of heads:
 
 $$ 
-P(m \ heads | N, \mu) = Binomial(m|N,\mu) = \binom{N}{m} \mu^m (1-\mu)^{N-m}
+P(m | N, \mu) = Binomial(m|N,\mu) = \binom{N}{m} \mu^m (1-\mu)^{N-m}
 $$
 
 ### Maximum likelihood
@@ -39,7 +41,7 @@ On Wikpedia, we can check how the $Beta(x\|\alpha, \beta)$ distribution looks li
 
 ![Plots of the Beta distribution](http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Beta_distribution_pdf.svg/639px-Beta_distribution_pdf.svg.png)
 
-Now we can compute again what is the _posterior_ value of $\mu$ knowing the data $D$ and the prior Beta:
+Now we can compute again what is the _posterior_ value of $\mu$ knowing the data $D$ and the prior Beta ($\propto$ means "proportional to"):
 
 $$
 \begin{align}
@@ -56,7 +58,7 @@ a_N = a_0 + m\\
 b_N = b_0 + (N-m)
 $$
 
-We can compute that, when $N \rightarrow \infty$, $\mathbb{E}[\mu] = \mu_{ML}$, as:
+We can compute that, when $N \rightarrow \infty$, the expectation of $\mu$: $\mathbb{E}[\mu] = \mu_{ML}$, as:
 
 $$
 \mathbb{E} [\mu | a_0, b_0, D] = \frac{a_N}{b_N}
@@ -64,7 +66,7 @@ $$
 
 ### First conclusion
 
-This approach of using a prior on the parameters of the distributions that are essential to our model (the predicting distribution) is central to the Bayesian approach of building models. It makes the model robust to what can happens, even though we had few data. It makes it easier to reason about our prior assumptions that simply "adding unseen data", and it yields in the presence of more data.
+This approach of using a prior on the parameters of the distributions that are essential to our model (the predicting distribution) is central to the Bayesian approach of building models. It makes the model robust to what can happen, even though we had few data. It makes it easier to reason about our prior assumptions that simply "adding unseen data", and it yields in the presence of more data.
 
 If you're interested about Bayesian modeling, there are plenty of very good textbooks. My prefered gradual introduction is [MacKay's ITILA](http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0521642981&linkCode=as2&tag=syhwsblog-20), that you can find as a [free ebook](http://www.inference.phy.cam.ac.uk/itila/book.html).
 
@@ -79,7 +81,7 @@ $$
 
 ### Plausible reasoning
 
-Now, we want to extend prepositional logic to _plausible reasoning_, in which we can have degrees of probability that rules will apply, or degrees of belief in these rules and fact. A pragmatic way to do that is to introduce the variable $C$ which represents $A \Rightarrow B$, that is: if $P(C)=p$, there is a probability $p$ that $A \Rightarrow B$. Then, this previous _modus ponens_ translates to:
+Now, we want to extend prepositional logic to _plausible reasoning_, in which we can have degrees of probability that rules are true; or degrees of belief in these rules and facts. A pragmatic way to do that is to introduce the variable $C$ which represents $A \Rightarrow B$, that is: if $P(C)=p$, there is a probability $p$ that $A \Rightarrow B$. Then, this previous _modus ponens_ translates to:
 
 $$
 P(B|A,C) = \frac{P(A|B,C)P(B|C)}{P(A|C)}\ (Bayes'\ theorem)\\
@@ -88,7 +90,7 @@ $$
 
 And actually, as $P(A,B\|C)=P(A\|C)$, we have $P(B\|A,C)=1$, which corresponds to the strong syllogism of _modus ponens_. 
 
-So now if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B\|A)$ (we are 100% sure of A):
+So now, if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B\|A)$ (we are 100% sure of A):
 
 $$
 \begin{align}

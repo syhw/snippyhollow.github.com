@@ -9,7 +9,7 @@
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Coinflips Let’s say we have a coin, and we want to decide if it’s fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. &hellip;">
+  <meta name="description" content="In which we look at two pragmatic hacks that lead to the Bayesian theory of probabilities, when pushed further and added as constraints. Coinflips &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -119,12 +119,14 @@
   </header>
 
 
-  <div class="entry-content"><h2 id="coinflips">Coinflips</h2>
+  <div class="entry-content"><p>In which we look at two pragmatic hacks that lead to the Bayesian theory of probabilities, when pushed further and added as constraints.</p>
+
+<h2 id="coinflips">Coinflips</h2>
 
 <p>Let’s say we have a coin, and we want to decide if it’s fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. With $\mu$ the ratio of heads:</p>
 
 <script type="math/tex; mode=display"> 
-P(m \ heads | N, \mu) = Binomial(m|N,\mu) = \binom{N}{m} \mu^m (1-\mu)^{N-m}
+P(m | N, \mu) = Binomial(m|N,\mu) = \binom{N}{m} \mu^m (1-\mu)^{N-m}
 </script>
 
 <h3 id="maximum-likelihood">Maximum likelihood</h3>
@@ -152,7 +154,7 @@ Beta(\mu|a, b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \mu^{a-1}(1-\mu)^{b-1}
 
 <p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Beta_distribution_pdf.svg/639px-Beta_distribution_pdf.svg.png" alt="Plots of the Beta distribution" /></p>
 
-<p>Now we can compute again what is the <em>posterior</em> value of $\mu$ knowing the data $D$ and the prior Beta:</p>
+<p>Now we can compute again what is the <em>posterior</em> value of $\mu$ knowing the data $D$ and the prior Beta ($\propto$ means “proportional to”):</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 
@@ -170,7 +172,7 @@ a_N = a_0 + m\\
 b_N = b_0 + (N-m)
 </script>
 
-<p>We can compute that, when $N \rightarrow \infty$, $\mathbb{E}[\mu] = \mu_{ML}$, as:</p>
+<p>We can compute that, when $N \rightarrow \infty$, the expectation of $\mu$: $\mathbb{E}[\mu] = \mu_{ML}$, as:</p>
 
 <script type="math/tex; mode=display">
 \mathbb{E} [\mu | a_0, b_0, D] = \frac{a_N}{b_N}
@@ -178,7 +180,7 @@ b_N = b_0 + (N-m)
 
 <h3 id="first-conclusion">First conclusion</h3>
 
-<p>This approach of using a prior on the parameters of the distributions that are essential to our model (the predicting distribution) is central to the Bayesian approach of building models. It makes the model robust to what can happens, even though we had few data. It makes it easier to reason about our prior assumptions that simply “adding unseen data”, and it yields in the presence of more data.</p>
+<p>This approach of using a prior on the parameters of the distributions that are essential to our model (the predicting distribution) is central to the Bayesian approach of building models. It makes the model robust to what can happen, even though we had few data. It makes it easier to reason about our prior assumptions that simply “adding unseen data”, and it yields in the presence of more data.</p>
 
 <p>If you’re interested about Bayesian modeling, there are plenty of very good textbooks. My prefered gradual introduction is <a href="http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521642981&amp;linkCode=as2&amp;tag=syhwsblog-20">MacKay’s ITILA</a>, that you can find as a <a href="http://www.inference.phy.cam.ac.uk/itila/book.html">free ebook</a>.</p>
 
@@ -192,7 +194,7 @@ b_N = b_0 + (N-m)
 
 <h3 id="plausible-reasoning">Plausible reasoning</h3>
 
-<p>Now, we want to extend prepositional logic to <em>plausible reasoning</em>, in which we can have degrees of probability that rules will apply, or degrees of belief in these rules and fact. A pragmatic way to do that is to introduce the variable $C$ which represents $A \Rightarrow B$, that is: if $P(C)=p$, there is a probability $p$ that $A \Rightarrow B$. Then, this previous <em>modus ponens</em> translates to:</p>
+<p>Now, we want to extend prepositional logic to <em>plausible reasoning</em>, in which we can have degrees of probability that rules are true; or degrees of belief in these rules and facts. A pragmatic way to do that is to introduce the variable $C$ which represents $A \Rightarrow B$, that is: if $P(C)=p$, there is a probability $p$ that $A \Rightarrow B$. Then, this previous <em>modus ponens</em> translates to:</p>
 
 <script type="math/tex; mode=display">
 P(B|A,C) = \frac{P(A|B,C)P(B|C)}{P(A|C)}\ (Bayes'\ theorem)\\
@@ -201,7 +203,7 @@ P(B|A,C)=\frac{P(A,B|C)}{P(A|C)}\ (Product\ rule)
 
 <p>And actually, as $P(A,B|C)=P(A|C)$, we have $P(B|A,C)=1$, which corresponds to the strong syllogism of <em>modus ponens</em>. </p>
 
-<p>So now if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B|A)$ (we are 100% sure of A):</p>
+<p>So now, if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B|A)$ (we are 100% sure of A):</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 

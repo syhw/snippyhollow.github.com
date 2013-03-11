@@ -8,7 +8,7 @@ categories: [Bayesian, Dirichlet process, mixture models, Gibbs sampling]
 
 I really enjoyed the pedagogy of [Edwin Chen's introduction to infinite mixture models](http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/), but I was a little disappointed that it does not go as far as presenting the details of the Dirichlet process Gaussian mixture model (DPGMM), as he uses [sklearn's variational Bayes DPGMM implementation](http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures). 
 
-For this reason, I will try and give here sufficient information to implement a DPGMM with collapsed Gibbs sampling.
+For this reason, I will try and give here sufficient information to implement a DPGMM with collapsed Gibbs sampling. This is not an [in-depth evaluation of which conjugate priors to use](http://www.is.tuebingen.mpg.de/fileadmin/user_upload/files/publications/GoeRas10_[0].pdf), nor an analysis of the [parameters](http://www.stat.duke.edu/courses/Spring06/sta376/Support/Mixtures/Escobar.West.1995.pdf) and [hyper-parameters](ftp://dce.hut.edu.vn/vinhlt/Papers/GMM/Infinite%20GMM.pdf) (that should have their own priors! ;)).
 
 ### Prerequisites
 On Dirichlet processes, Chinese Restaurant processes, Indian Buffet processes, there is [the excellent blog post by Edwin Chen](http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/). Another excellent introduction to Dirichlet processes is provided by [Frigyik, Kapila and Gupta](http://www.ee.washington.edu/research/guptalab/publications/UWEETR-2010-0006.pdf).
@@ -17,20 +17,19 @@ If you lack some knowledge about clustering or density estimation (unsupervised 
 
 ### DPGMM: the model
 
-Let's say we have $N$ observations and $K$ clusters, $i \in [1\dots N]$ is the indice for the observations, while $k \in [1\dots K]$ is the indice for the clusters.
+Let's say we have $N$ observations and $K$ clusters, $i \in [1\dots N]$ is the indice for the observations, while $k \in [1\dots K]$ is the indice for the clusters. With $z_i$ the cluster assignment of observation $x_i$, and $\theta_k$ the parameter of mixture $k$:
 
-The generative story of a DPGMM is as follows:
+$$
+P(x_{1:N}) = \prod_{i=1}^N \sum_{k=1}^K P(x_i|\theta_{z_i}) P(z_i=k)
+$$
+
+So, the generative story of a DPGMM is as follows:
 
 $\pi \sim Stick(\alpha)$ (mixing rates)  
 $z_i \sim \pi$ (cluster assignments)  
 $\theta_k \sim H(\lambda)$ (parameters)  
 $x_i \sim F(\theta_{z_i})$ (values)   
 
-So we have:
-
-$$
-P(x_{1:N}) = \prod_{i=1}^N \sum_{k=1}^K P(x_i|\theta_{z_i}) P(z_i=k)
-$$
 
 ### Fitting the data
 Notation: 
@@ -51,6 +50,7 @@ $$
 P(z_i = k | z_{-i}, x, \alpha, \lambda) \propto P(z_i = k | z_{-i}, \alpha)P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda)
 $$
 
+Then:
 
 $$
 \boxed{P(z_i = k | z_{-i}, \alpha) = \left\{ 
@@ -79,21 +79,21 @@ $$
 
 ### Conjugate priors
 
-Now we should choose $H$ for it to be conjugate to $F$ and have easy to compute parameters posterior. As we want $F$ to be multivariate normal: we can look on [Wikipedia's page of conjugate priors](http://en.wikipedia.org/wiki/Conjugate_prior) under multivariate normal with unknown $\mu$ and $\Sigma$ to see that $H$ should be Normal-inverse-Wishart with prior parameters:
+Now we should choose $H$ for it to be conjugate to $F$ and have easy to compute parameters posterior. As we want $F$ to be multivariate normal: we can look on [Wikipedia's page of conjugate priors](http://en.wikipedia.org/wiki/Conjugate_prior) under multivariate normal with unknown $\mu$ and $\Sigma$ to see that $H$ should be normal-inverse-Wishart with prior parameters:
 
  - $\mu_0$ initial mean guess [In my code further, I set it to the mean of whole the dataset.]
- - $\kappa_0$ mean fraction (smoothing parameter) [I set it to 0.]
+ - $\kappa_0$ mean fraction (smoothing parameter) [A common value is 1. I set it to 0.]
  - $\nu_0$ degrees of freedom [I set it to the number of dimensions.]
- - $\Psi_0$ pairwise deviation product (matrix) [I set it to $d\times d$ identity matrix.]
+ - $\Psi_0$ pairwise deviation product (matrix) [I set it to $10 \times I_d$ ($I_d$ is the $d\times d$ identity matrix). Indentity matrix makes this prior Gaussian circular, the $10$ factor should be dependant on the dataset, for instance on the mean distance between points.]
 
-This gives us MAP estimates on parameters:
+This gives us MAP estimates on parameters, for _one_ of the clusters:
 
 $$
 \begin{align}
 & \mu_n = \frac{\kappa_0 \mu_0 + n\tilde{x}}{\kappa_0 +n} = \mu\\
 & \kappa_n = \kappa_0 + n\\
 & \nu_n = \nu_0 + n \\
-& \Psi_n = \Psi_0 + C + \frac{\kappa_0 n}{\kappa_0 + n}(\tilde{x} - \mu_0)(\tilde{x} - \mu_0)^T$\\
+& \Psi_n = \Psi_0 + C + \frac{\kappa_0 n}{\kappa_0 + n}(\tilde{x} - \mu_0)(\tilde{x} - \mu_0)^T\\
 & \Sigma = \frac{\kappa_n + 1}{\kappa_n * (\nu_n - d + 1)}\Psi_n
 \end{align}
 $$
@@ -101,17 +101,23 @@ $$
 with $\tilde{x}$ the sample mean and $C=\sum_{i=1}^n (x_i-\tilde{x})(x_i-\tilde{x})^T$.
 
 Set $\kappa_{0} = 0$ to have no effect of the prior on the posterior mean. 
-This reduces to MLE estimates if 
+This reduces to MLE estimates if:
 
 $$
 \kappa_{0} = 0, \nu_{0} = d, \|\Psi_{0}\| = 0
+$$
+
+So now we can compute the posterior predictive for cluster $k$ evaluated at $x_i$
+
+$$
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) \propto \mathcal{N}(\mu_{k,-i}, \Sigma_{k,-i})
 $$
 
 ### Collapsed Gibbs sampling
 
 Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of [Neal's seminal paper](http://www.stat.purdue.edu/~rdutta/24.PDF):
 
-    while (not converged on mus and sigmas): // or in log-likelihood
+    while (not converged on mus and sigmas):
         for each i = 1 : N in random order do:
             remove x[i]'s sufficient statistics from old cluster z[i]
             if any cluster is empty, remove it and decrease K
@@ -126,8 +132,14 @@ Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of 
             add x[i]'s sufficient statistics to new cluster z[i]
             (possibly increase K)
 
+### Results
+
+Here is the result of our implementation of collapsed Gibbs sampling DPGMM compared to scikit-learn's implementation of [variational Bayes DPGMM](http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures):
+
+{% img http://i.imgur.com/L6RY7TA.png %}
+
 ### Code
 
-Here is my quick-and-dirty code implementing this version of Gibbs sampling for DPGMM. You may want to comment out scikit-learn if you do not have it installed (I use [sklearn's VB DPGMM](http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures) as a comparison).
+Here is my quick-and-dirty code implementing this version of Gibbs sampling for DPGMM. You may want to comment out scikit-learn (that I used for the comparison above) if you do not have it installed.
 
 {% gist 5128969 %}

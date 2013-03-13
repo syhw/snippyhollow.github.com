@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mixture models | Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/blog/categories/mixture-models/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2013-03-11T10:20:47+01:00</updated>
+  <updated>2013-03-13T17:40:42+01:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -152,7 +152,7 @@ P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) \propto \mathcal{N}(\mu_{k,-i}, \Sigma_{
 
 <p>Here is the result of our implementation of collapsed Gibbs sampling DPGMM compared to scikit-learn’s implementation of <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">variational Bayes DPGMM</a>:</p>
 
-<p><img src="http://i.imgur.com/L6RY7TA.png"></p>
+<p><img src="https://dl.dropbox.com/u/14035465/pictures/DPGMM.png"></p>
 
 <h3 id="code">Code</h3>
 

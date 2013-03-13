@@ -136,7 +136,7 @@ Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of 
 
 Here is the result of our implementation of collapsed Gibbs sampling DPGMM compared to scikit-learn's implementation of [variational Bayes DPGMM](http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures):
 
-{% img http://i.imgur.com/L6RY7TA.png %}
+{% img https://dl.dropbox.com/u/14035465/pictures/DPGMM.png %}
 
 ### Code
 

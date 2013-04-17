@@ -17,12 +17,6 @@
         <lastmod>2013-03-21T16:55:39+01:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://snippyhollow.github.com/blog/2013/03/19/how-i-used-sklearn-to-play-starcraft/
-        </loc>
-        <lastmod>2013-03-19T18:53:44+01:00</lastmod>
-    </url>
-    <url>
         <loc>http://snippyhollow.github.com/about/</loc>
         <lastmod>2013-03-11T09:09:54+01:00</lastmod>
     </url>
@@ -33,6 +27,10 @@
     <url>
         <loc>http://snippyhollow.github.com/git-and-gitolite/</loc>
         <lastmod>2013-03-20T15:36:18+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://snippyhollow.github.com/htk-pipeline/</loc>
+        <lastmod>2013-04-17T16:10:00+02:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/</loc>

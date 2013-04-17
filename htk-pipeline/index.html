@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>about - Exchangeable random experiments</title>
+  <title>htk pipeline - Exchangeable random experiments</title>
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="About Mar 11th, 2013 I’m a post-doc in Paris at LSCP on the Bootphon ERC project. Previously, I did a PhD on Bayesian modeling applied to video &hellip;">
+  <meta name="description" content="Htk Pipeline Apr 17th, 2013 Summary: the workflow make prepare dataset=PATH_TO_YOUR_DATASET
+make train_monophones dataset_train_folder= &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://snippyhollow.github.com/about/">
+  <link rel="canonical" href="http://snippyhollow.github.com/htk-pipeline/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -93,7 +94,7 @@
 <article role="article">
   
   <header>
-    <h1 class="entry-title">About</h1>
+    <h1 class="entry-title">Htk Pipeline</h1>
     <p class="meta">
 
 
@@ -106,20 +107,172 @@
   
 
 
-<time datetime="2013-03-11T09:03:00+01:00" pubdate data-updated="true">Mar 11<span>th</span>, 2013</time></p>
+<time datetime="2013-04-17T12:39:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time></p>
   </header>
   
-  <p>I’m a post-doc in Paris at <a href="http://www.lscp.net/index.php?lang=en">LSCP</a> on the <a href="http://www.lscp.net/persons/dupoux/bootphon/">Bootphon ERC project</a>. Previously, I did a <a href="http://tel.archives-ouvertes.fr/tel-00780635">PhD</a> on <a href="http://emotion.inrialpes.fr/people/synnaeve/">Bayesian modeling applied to video games AI</a> at University of Grenoble, <a href="https://team.inria.fr/e-motion/en">E-Motion team at INRIA</a>, and <a href="http://www.lppa.college-de-france.fr/EN/index.htm">LPPA at Collège de France</a>.</p>
+  <h3 id="summary-the-workflow">Summary: the workflow</h3>
 
-<p>I’m also on:</p>
+<pre><code>make prepare dataset=PATH_TO_YOUR_DATASET
+make train_monophones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+make test_monophones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+</code></pre>
+
+<h3 id="your-dataset">Your dataset</h3>
+
+<p>HTK needs MFC files (<code>.mfc</code>, encoded with <code>HCopy</code> preferably) the corresponding 
+labels. From that we produce one master label format (<code>.mlf</code>) files, which is 
+just the concatenation of all labels in a gigantic file, with corresponding 
+paths; and one <code>.scp</code> file which gives the paths to the <code>.mfc</code>. </p>
+
+<p>So, to begin the training with HTK, you need two folders <code>train</code> and <code>test</code>, 
+containing at least <code>.mfc</code> files and the corresponding the two <code>.scp</code> and 
+<code>.mlf</code> files. Fortunately, <code>htk-tools</code> includes several dataset preparation 
+scripts. </p>
+
+<h3 id="preparation-study-case-timit">Preparation study case: TIMIT</h3>
+
+<p>TIMIT comes with <code>.wav</code> files (at 16Khz, without correct headers) and <code>.phn</code> 
+files for the phones labels (annotated in frames). Let us have a look at 
+what <code>make prepare</code> does:</p>
+
+<pre><code>python src/mfcc_and_gammatones.py --htk-mfcc $(dataset)/train
+python src/mfcc_and_gammatones.py --htk-mfcc $(dataset)/test
+</code></pre>
+
+<p>This uses the <code>wav_config</code> file and <code>HCopy</code> to produce MFCC from all the wave 
+files that are contained (recursively explore) the <code>train</code> and <code>test</code> folders 
+of the dataset. These python scripts can also produce the gammatones and should 
+be where all the signal processing goes.</p>
+
+<pre><code>python src/timit_to_htk_labels.py $(dataset)/train
+python src/timit_to_htk_labels.py $(dataset)/test
+</code></pre>
+
+<p>This step is TIMIT specific: as the <code>.phn</code> files are in frames, it converts 
+the labeling in nanoseconds and saves that as <code>.lab</code> files.</p>
+
+<pre><code>python src/substitute_phones.py $(dataset)/train --sentences
+python src/substitute_phones.py $(dataset)/test --sentences
+</code></pre>
+
+<p>This step substitutes phones according to the dictionary at the beginning of 
+the script. Here, it maps all the phones from TIMIT to the 39 phones of the 
+English subset that everyone agrees on. The <code>--sentences</code> is optional and 
+makes it that we use <code>&lt;s&gt;</code> and <code>&lt;/s&gt;</code> as start and end of sentences symbols. </p>
+
+<p>We are almost done, now:</p>
+
+<pre><code>python src/create_phonesMLF_list_labels.py $(dataset)/train
+python src/create_phonesMLF_list_labels.py $(dataset)/test
+</code></pre>
+
+<p>Will create <code>${folder}.mlf</code>, <code>${folder}.scp</code>, <code>labels</code> and <code>dict</code> files in 
+<code>$folder_path</code>, for both the <code>train</code> and <code>test</code> folders.</p>
+
+<h3 id="training">Training</h3>
+
+<p>Once the preparation described above is done, the training should be dataset 
+agnostic, with the exception of having to decide for good triphones clustering 
+(which, of all the possible triphones, should be separated, and which should be 
+tied to each other). </p>
+
+<p>Train monophones HMM:</p>
+
+<pre><code>make train_monophones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+make test_monophones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+</code></pre>
+
+<p>Or, train triphones:</p>
+
+<pre><code>TODO
+make train_triphones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+</code></pre>
+
+<h3 id="results-you-can-expect">Results you can expect</h3>
+
+<p>On TIMIT, for phones recognition, the results I get are:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>[Phones]</th>
+      <th>[Representation]</th>
+      <th style="text-align: center">[start/end]</th>
+      <th style="text-align: center">[tune sil]</th>
+      <th style="text-align: center">[Accuracy (%)]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mono</td>
+      <td>mono Gaussian</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">50.90</td>
+    </tr>
+    <tr>
+      <td>Mono</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">70.53</td>
+    </tr>
+    <tr>
+      <td>Mono</td>
+      <td>mono Gaussian</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">58.36</td>
+    </tr>
+    <tr>
+      <td>Mono</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">71.51</td>
+    </tr>
+    <tr>
+      <td>Tri</td>
+      <td>mono Gaussian</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td>Tri</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center"> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>I encourage everyone to give me their results so that I can update this page 
+with other datasets.</p>
+
+<h3 id="warnings">/!\ Warnings</h3>
 
 <ul>
-  <li><a href="https://twitter.com/syhw">Twitter</a></li>
-  <li><a href="https://plus.google.com/103362529593094621422/posts">Google+</a></li>
-  <li><a href="http://www.facebook.com/gabriel.synnaeve">Facebook</a></li>
-  <li><a href="http://pinboard.in/u:syhw">Pinboard</a></li>
-  <li><a href="http://pinboard.in/u:syhw">Github</a></li>
+  <li>If you compile HTK yourself, make sure that it works correctly. 
+Unfortunately there is no test case. Try <code>echo "( &lt; a | b &gt; )" &gt; gram &amp;&amp; HParse gram wdnet</code> 
+and see if you get a segfault. Particularly, you need to compile with GCC 
+and not LLVM-GCC (otherwise silent errors ensue).</li>
+  <li>There is a bad case of “HTKism” in the fact that the wordnets produced by 
+<code>HBuild dict wdnet</code> and <code>HParse gram wdnet</code> with a simple “OR(phones)” grammar 
+gives very different results, respectively 68.18% and 70.53% for monophones 
+with a maximum of 17 components GMM without start symbols on TIMIT. For 
+monophones with 17 components GMM <em>with</em> start symbols, I get respectively 69.92% 
+vs 71.52%.</li>
 </ul>
+
+<h3 id="more-details-about-htk">More details about HTK</h3>
+
+<p>Of course there is the <a href="http://htk.eng.cam.ac.uk/docs/docs.shtml">HTK book</a> 
+to consult, but here are some details of the training and testing parts.</p>
+
+<p>TODO</p>
 
   
     <footer>
@@ -137,13 +290,13 @@
   
 
 
-<time datetime="2013-03-11T09:03:00+01:00" pubdate data-updated="true">Mar 11<span>th</span>, 2013</time>
+<time datetime="2013-04-17T12:39:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time>
         
       </p>
       
         <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/about/index.html" data-via="syhw" data-counturl="http://snippyhollow.github.com/about/index.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/htk-pipeline/index.html" data-via="syhw" data-counturl="http://snippyhollow.github.com/htk-pipeline/index.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>

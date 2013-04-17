@@ -9,8 +9,7 @@
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Htk Pipeline Apr 17th, 2013 Summary: the workflow make prepare dataset=PATH_TO_YOUR_DATASET
-make train_monophones dataset_train_folder= &hellip;">
+  <meta name="description" content="Htk Pipeline Apr 17th, 2013 If you don’t have it, clone it from: git clone gitolite@habilis:htk-pipeline.git Summary: the workflow make prepare &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,7 +109,12 @@ make train_monophones dataset_train_folder= &hellip;">
 <time datetime="2013-04-17T12:39:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time></p>
   </header>
   
-  <h3 id="summary-the-workflow">Summary: the workflow</h3>
+  <p>If you don’t have it, clone it from:</p>
+
+<pre><code>git clone gitolite@habilis:htk-pipeline.git
+</code></pre>
+
+<h3 id="summary-the-workflow">Summary: the workflow</h3>
 
 <pre><code>make prepare dataset=PATH_TO_YOUR_DATASET
 make train_monophones dataset_train_folder=PATH_TO_YOUR_DATASET/train
@@ -252,7 +256,17 @@ make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
 <p>I encourage everyone to give me their results so that I can update this page 
 with other datasets.</p>
 
-<h3 id="warnings">/!\ Warnings</h3>
+<h3 id="alignment">Alignment</h3>
+
+<p>If you want to get phones alignments with a trained model, you can simply do:</p>
+
+<pre><code>make align input_scp=PATH_TO_YOUR_DATASET_SCP_FILE output_mlf=ALIGNED_MLF
+</code></pre>
+
+<p>and you will get the aligned phones in the <code>ALIGNED_MLF</code> file. However, keep 
+in mind that the results are only as good as your recognition rate!</p>
+
+<h3 id="warnings-">/!\ Warnings /!\</h3>
 
 <ul>
   <li>If you compile HTK yourself, make sure that it works correctly. 
@@ -272,7 +286,32 @@ vs 71.52%.</li>
 <p>Of course there is the <a href="http://htk.eng.cam.ac.uk/docs/docs.shtml">HTK book</a> 
 to consult, but here are some details of the training and testing parts.</p>
 
-<p>TODO</p>
+<p>When working with HTK, there is the same information repeated over and over, 
+scattered at different locations.</p>
+
+<pre><code>TODO, clean and explain the following:
+
+# on training (3 times)
+HERest -I $(TMP_TRAIN_FOLDER)/train.mlf -S $(TMP_TRAIN_FOLDER)/train.scp -H $(TMP_TRAIN_FOLDER)/hmm_mono_simple0/macros -H $(TMP_TRAIN_FOLDER)/hmm_mono_simple0/hmmdefs -M $(TMP_TRAIN_FOLDER)/hmm_mono_simple1 $(TMP_TRAIN_FOLDER)/monophones0 
+
+# on silence models
+AT 2 4 0.2 {sil.transP}
+AT 4 2 0.2 {sil.transP}
+
+# on mixtures
+HHEd -H $(TMP_TRAIN_FOLDER)/hmm_mono_mix0/hmmdefs $(TMP_TRAIN_FOLDER)/TRMU2.hed $(TMP_TRAIN_FOLDER)/monophones0
+
+# on triphones
+HLEd -n $(TMP_TRAIN_FOLDER)/triphones0 -l '*' -i $(TMP_TRAIN_FOLDER)/wintri.mlf mktri.led $(TMP_TRAIN_FOLDER)/train.mlf
+
+# on contexts tying (triphones)
+python src/adapt_quests.py $(TMP_TRAIN_FOLDER)/monophones0 quests_example.hed $(TMP_TRAIN_FOLDER)/quests.hed
+mkclscript TB 350.0 $(TMP_TRAIN_FOLDER)/monophones0 &gt; $(TMP_TRAIN_FOLDER)/tb_contexts.hed
+python create_contexts_tying.py QUESTIONS_FILE THRESHOLDS_FILE OUTPUT_FILE [FOLDER]
+
+# on bigram language models
+HLStats -b $(TMP_TRAIN_FOLDER)/bigram $(TMP_TRAIN_FOLDER)/dict $(TMP_TRAIN_FOLDER)/train.mlf
+</code></pre>
 
   
     <footer>

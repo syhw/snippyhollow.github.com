@@ -1,0 +1,120 @@
+---
+layout: page
+title: "htk pipeline"
+date: 2013-04-17 12:39
+comments: true
+sharing: true
+footer: true
+---
+
+
+### Summary: the workflow
+
+    make prepare dataset=PATH_TO_YOUR_DATASET
+    make train_monophones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+    make test_monophones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+
+### Your dataset
+
+HTK needs MFC files (`.mfc`, encoded with `HCopy` preferably) the corresponding 
+labels. From that we produce one master label format (`.mlf`) files, which is 
+just the concatenation of all labels in a gigantic file, with corresponding 
+paths; and one `.scp` file which gives the paths to the `.mfc`. 
+
+So, to begin the training with HTK, you need two folders `train` and `test`, 
+containing at least `.mfc` files and the corresponding the two `.scp` and 
+`.mlf` files. Fortunately, `htk-tools` includes several dataset preparation 
+scripts. 
+
+### Preparation study case: TIMIT
+
+TIMIT comes with `.wav` files (at 16Khz, without correct headers) and `.phn` 
+files for the phones labels (annotated in frames). Let us have a look at 
+what `make prepare` does:
+
+    python src/mfcc_and_gammatones.py --htk-mfcc $(dataset)/train
+    python src/mfcc_and_gammatones.py --htk-mfcc $(dataset)/test
+
+This uses the `wav_config` file and `HCopy` to produce MFCC from all the wave 
+files that are contained (recursively explore) the `train` and `test` folders 
+of the dataset. These python scripts can also produce the gammatones and should 
+be where all the signal processing goes.
+
+	python src/timit_to_htk_labels.py $(dataset)/train
+	python src/timit_to_htk_labels.py $(dataset)/test
+
+This step is TIMIT specific: as the `.phn` files are in frames, it converts 
+the labeling in nanoseconds and saves that as `.lab` files.
+
+	python src/substitute_phones.py $(dataset)/train --sentences
+	python src/substitute_phones.py $(dataset)/test --sentences
+
+This step substitutes phones according to the dictionary at the beginning of 
+the script. Here, it maps all the phones from TIMIT to the 39 phones of the 
+English subset that everyone agrees on. The `--sentences` is optional and 
+makes it that we use `<s>` and `</s>` as start and end of sentences symbols. 
+
+We are almost done, now:
+
+	python src/create_phonesMLF_list_labels.py $(dataset)/train
+	python src/create_phonesMLF_list_labels.py $(dataset)/test
+
+Will create `${folder}.mlf`, `${folder}.scp`, `labels` and `dict` files in 
+`$folder_path`, for both the `train` and `test` folders.
+
+### Training
+
+Once the preparation described above is done, the training should be dataset 
+agnostic, with the exception of having to decide for good triphones clustering 
+(which, of all the possible triphones, should be separated, and which should be 
+tied to each other). 
+
+Train monophones HMM:
+
+    make train_monophones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+    make test_monophones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+
+Or, train triphones:
+
+    TODO
+    make train_triphones dataset_train_folder=PATH_TO_YOUR_DATASET/train
+    make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
+
+
+### Results you can expect
+
+On TIMIT, for phones recognition, the results I get are:
+
+| [Phones] | [Representation]    | [start/end] | [tune sil]  | [Accuracy (%)] |
+| -------- | ------------------- |:-----------:|:-----------:|:--------------:|
+| Mono     | mono Gaussian       | no          | no          | 50.90          |
+| Mono     | 17 components GMM   | no          | yes         | 70.53          |
+| Mono     | mono Gaussian       | yes         | no          | 58.36          |
+| Mono     | 17 components GMM   | yes         | yes         | 71.51          |
+| Tri      | mono Gaussian       | yes         | yes         |                |
+| Tri      | 17 components GMM   | yes         | yes         |                |
+
+
+I encourage everyone to give me their results so that I can update this page 
+with other datasets.
+
+### /!\ Warnings 
+
+ - If you compile HTK yourself, make sure that it works correctly. 
+Unfortunately there is no test case. Try `echo "( < a | b > )" > gram && HParse gram wdnet` 
+and see if you get a segfault. Particularly, you need to compile with GCC 
+and not LLVM-GCC (otherwise silent errors ensue).
+ - There is a bad case of "HTKism" in the fact that the wordnets produced by 
+`HBuild dict wdnet` and `HParse gram wdnet` with a simple "OR(phones)" grammar 
+gives very different results, respectively 68.18% and 70.53% for monophones 
+with a maximum of 17 components GMM without start symbols on TIMIT. For 
+monophones with 17 components GMM _with_ start symbols, I get respectively 69.92% 
+vs 71.52%.
+
+
+### More details about HTK
+
+Of course there is the [HTK book](http://htk.eng.cam.ac.uk/docs/docs.shtml) 
+to consult, but here are some details of the training and testing parts.
+
+TODO

@@ -7,6 +7,9 @@ sharing: true
 footer: true
 ---
 
+If you don't have it, clone it from:
+
+    git clone gitolite@habilis:htk-pipeline.git
 
 ### Summary: the workflow
 
@@ -98,7 +101,17 @@ On TIMIT, for phones recognition, the results I get are:
 I encourage everyone to give me their results so that I can update this page 
 with other datasets.
 
-### /!\ Warnings 
+### Alignment
+
+If you want to get phones alignments with a trained model, you can simply do:
+
+    make align input_scp=PATH_TO_YOUR_DATASET_SCP_FILE output_mlf=ALIGNED_MLF
+
+and you will get the aligned phones in the `ALIGNED_MLF` file. However, keep 
+in mind that the results are only as good as your recognition rate!
+
+
+### /!\ Warnings /!\
 
  - If you compile HTK yourself, make sure that it works correctly. 
 Unfortunately there is no test case. Try `echo "( < a | b > )" > gram && HParse gram wdnet` 
@@ -117,4 +130,28 @@ vs 71.52%.
 Of course there is the [HTK book](http://htk.eng.cam.ac.uk/docs/docs.shtml) 
 to consult, but here are some details of the training and testing parts.
 
-TODO
+When working with HTK, there is the same information repeated over and over, 
+scattered at different locations.
+
+    TODO, clean and explain the following:
+
+	# on training (3 times)
+	HERest -I $(TMP_TRAIN_FOLDER)/train.mlf -S $(TMP_TRAIN_FOLDER)/train.scp -H $(TMP_TRAIN_FOLDER)/hmm_mono_simple0/macros -H $(TMP_TRAIN_FOLDER)/hmm_mono_simple0/hmmdefs -M $(TMP_TRAIN_FOLDER)/hmm_mono_simple1 $(TMP_TRAIN_FOLDER)/monophones0 
+
+    # on silence models
+    AT 2 4 0.2 {sil.transP}
+    AT 4 2 0.2 {sil.transP}
+
+    # on mixtures
+	HHEd -H $(TMP_TRAIN_FOLDER)/hmm_mono_mix0/hmmdefs $(TMP_TRAIN_FOLDER)/TRMU2.hed $(TMP_TRAIN_FOLDER)/monophones0
+
+    # on triphones
+	HLEd -n $(TMP_TRAIN_FOLDER)/triphones0 -l '*' -i $(TMP_TRAIN_FOLDER)/wintri.mlf mktri.led $(TMP_TRAIN_FOLDER)/train.mlf
+
+    # on contexts tying (triphones)
+	python src/adapt_quests.py $(TMP_TRAIN_FOLDER)/monophones0 quests_example.hed $(TMP_TRAIN_FOLDER)/quests.hed
+	mkclscript TB 350.0 $(TMP_TRAIN_FOLDER)/monophones0 > $(TMP_TRAIN_FOLDER)/tb_contexts.hed
+    python create_contexts_tying.py QUESTIONS_FILE THRESHOLDS_FILE OUTPUT_FILE [FOLDER]
+
+    # on bigram language models
+	HLStats -b $(TMP_TRAIN_FOLDER)/bigram $(TMP_TRAIN_FOLDER)/dict $(TMP_TRAIN_FOLDER)/train.mlf

@@ -7,11 +7,13 @@ published: false
 categories: [Bayesian, EM, mixture models]
 ---
 
-The problem that the expectation-maximization (EM) algorithm solves is simple to state. Given observed variables $X$ and hidden variables $Z$, the goal is to find the set of parameters $\theta$ that maximizes the likelihood:
+The problem that the expectation-maximization (EM) algorithms solve is simple to state. Given observed variables $X$ and hidden variables $Z$, the goal is to find the set of parameters $\theta$ that maximizes the likelihood:
 
 $$
 P(X|\theta) = \sum_{Z} P(X, Z|\theta)
 $$
+
+The full integration on $Z$ is most often intractable in practice.
 
 ### EM as averaging
 
@@ -82,6 +84,10 @@ K-means cost function:
 $$
 J = \sum_{n=1}^{N} \sum_{k=1}^{K} resp_{n,k}||x_n - \mu_k||^2
 $$
+
+"E-step": minimize J w.r.t. $resp_{n,k}$
+
+"M-step": minimize J w.r.t $\mu_k$
 
 {% img https://dl.dropbox.com/u/14035465/pictures/kmeans_EM.png %}
 

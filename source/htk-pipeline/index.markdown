@@ -83,20 +83,30 @@ Or, train triphones:
     make train_triphones dataset_train_folder=PATH_TO_YOUR_DATASET/train
     make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
 
+In the end, I wish to have a simple "make train / make test" with state of the 
+art results.
+
 
 ### Results you can expect
 
 On TIMIT, for phones recognition, the results I get are:
 
-| [Phones] | [Representation]    | [start/end] | [tune sil]  | [Accuracy (%)] |
-| -------- | ------------------- |:-----------:|:-----------:|:--------------:|
-| Mono     | mono Gaussian       | no          | no          | 50.90          |
-| Mono     | 17 components GMM   | no          | yes         | 70.53          |
-| Mono     | mono Gaussian       | yes         | no          | 58.36          |
-| Mono     | 17 components GMM   | yes         | yes         | 71.51          |
-| Tri      | mono Gaussian       | yes         | yes         |                |
-| Tri      | 17 components GMM   | yes         | yes         |                |
+| [Phones] | [Representation]    | [start/end] | [tune sil]  | [bigram LM] | [% correct]   |
+| -------- | ------------------- |:-----------:|:-----------:|:-----------:|:-------------:|
+| Mono 39  | mono Gaussian       | no          | no          | no          | 50.90         |
+| Mono 39  | 17 components GMM   | no          | yes         | no          | 70.53         |
+| Mono 41  | mono Gaussian       | yes         | no          | no          | 60.29         |
+| Mono 41  | mono Gaussian       | yes         | no          | yes         | 61.88         |
+| Mono 41  | 17 components GMM   | yes         | yes         | no          | 71.51         |
+| Mono 41  | 17 components GMM   | yes         | yes         | yes         | 71.81         |
+| Mono 62  | 17 components GMM   | yes         | yes         | no          | 66.70 / 75.22 |
+| Mono 62  | 17 components GMM   | yes         | yes         | yes         | 68.42 / 75.75 |
+| Tri      | mono Gaussian       | yes         | yes         | no          |               |
+| Tri      | mono Gaussian       | yes         | yes         | yes         |               |
+| Tri      | 17 components GMM   | yes         | yes         | no          |               |
+| Tri      | 17 components GMM   | yes         | yes         | yes         |               |
 
+(66.70 / 75.22 means 66.70% correctness on 62 phones and 75.22% correctness by grouping the phones down to 39).
 
 I encourage everyone to give me their results so that I can update this page 
 with other datasets.

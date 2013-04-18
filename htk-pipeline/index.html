@@ -193,6 +193,9 @@ make train_triphones dataset_train_folder=PATH_TO_YOUR_DATASET/train
 make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
 </code></pre>
 
+<p>In the end, I wish to have a simple “make train / make test” with state of the 
+art results.</p>
+
 <h3 id="results-you-can-expect">Results you can expect</h3>
 
 <p>On TIMIT, for phones recognition, the results I get are:</p>
@@ -204,41 +207,87 @@ make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
       <th>[Representation]</th>
       <th style="text-align: center">[start/end]</th>
       <th style="text-align: center">[tune sil]</th>
-      <th style="text-align: center">[Accuracy (%)]</th>
+      <th style="text-align: center">[bigram LM]</th>
+      <th style="text-align: center">[% correct]</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Mono</td>
+      <td>Mono 39</td>
       <td>mono Gaussian</td>
+      <td style="text-align: center">no</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">50.90</td>
     </tr>
     <tr>
-      <td>Mono</td>
+      <td>Mono 39</td>
       <td>17 components GMM</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
       <td style="text-align: center">70.53</td>
     </tr>
     <tr>
-      <td>Mono</td>
+      <td>Mono 41</td>
       <td>mono Gaussian</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
-      <td style="text-align: center">58.36</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">60.29</td>
     </tr>
     <tr>
-      <td>Mono</td>
+      <td>Mono 41</td>
+      <td>mono Gaussian</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">61.88</td>
+    </tr>
+    <tr>
+      <td>Mono 41</td>
       <td>17 components GMM</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
       <td style="text-align: center">71.51</td>
+    </tr>
+    <tr>
+      <td>Mono 41</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">71.81</td>
+    </tr>
+    <tr>
+      <td>Mono 62</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center">66.70 / 75.22</td>
+    </tr>
+    <tr>
+      <td>Mono 62</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">68.42 / 75.75</td>
     </tr>
     <tr>
       <td>Tri</td>
       <td>mono Gaussian</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td>Tri</td>
+      <td>mono Gaussian</td>
+      <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center"> </td>
@@ -246,12 +295,23 @@ make test_triphones dataset_test_folder=PATH_TO_YOUR_DATASET/test
     <tr>
       <td>Tri</td>
       <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">yes</td>
+      <td style="text-align: center">no</td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td>Tri</td>
+      <td>17 components GMM</td>
+      <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center"> </td>
     </tr>
   </tbody>
 </table>
+
+<p>(66.70 / 75.22 means 66.70% correctness on 62 phones and 75.22% correctness by grouping the phones down to 39).</p>
 
 <p>I encourage everyone to give me their results so that I can update this page 
 with other datasets.</p>

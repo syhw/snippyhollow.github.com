@@ -9,7 +9,7 @@
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Adaptor grammars are a quite recent nonparametric extension of PCFGs, which also can implement (discrete) hierarchial Dirichlet processes, with &hellip;">
+  <meta name="description" content="I really enjoyed the pedagogy of Edwin Chen’s introduction to infinite mixture models, but I was a little disappointed that it does not go as far as &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,118 +92,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/19/adaptor-grammars/">Adaptor Grammars</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-19T10:25:00+01:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Adaptor grammars are a <a href="http://mailserver.cog.brown.edu/~mj/papers/JohnsonGriffithsGoldwater06AdaptorGrammars.pdf">quite recent</a> nonparametric extension of PCFGs, which also can implement (discrete) hierarchial Dirichlet processes, with several applications in NLP already.</p>
-
-<h3 id="probabilistic-context-free-grammars">Probabilistic Context Free Grammars</h3>
-
-<p>A <a href="https://en.wikipedia.org/wiki/Context-free_grammar"><em>CFG</em></a> is a quadruple $(N, W, R, S)$ with:</p>
-
-<ul>
-  <li>$N$ a set of nonterminal symbols, e.g. (for the grammar of English): NP (noun phrase), VP (verb phrase).</li>
-  <li>$W$ a set of terminal symbols, e.g. “cat”, “dog”, “ate”.</li>
-  <li>$R$ a set of rules $A \rightarrow \beta$, with $A \in N$ and $\beta \in (N \cup W)$, e.g. $S \rightarrow NP\ VP;$ $NP \rightarrow the\ NN;$ $NN \rightarrow cat\ |\ dog; \dots$</li>
-  <li>$S$ the start symbol $S \in N$.</li>
-</ul>
-
-<p>A <a href="https://en.wikipedia.org/wiki/Stochastic_context-free_grammar"><em>PCFG</em></a> (sometimes also stochastic context-free grammar), is a quintuple $(N, W, R, S, \theta)$ which adds probabilities $\theta$ on all the rules: $\theta_{A \rightarrow \beta}$ is the probability that $A$ expands into $\beta$.</p>
-
-<p>The set of all <script type="math/tex">\theta_{A \rightarrow b}</script> defines a distribution $G_A$ over trees that have $A$ as a root (noted $T_A$). That is, if when we are in $A$ we can generate subtrees <script type="math/tex">t_1 \dots t_n</script> with root $A$, the distribution on these subtrees is <script type="math/tex">\prod_{i=1}^n G_i(t_i)</script>: the $t_i$ are generated indepently (of <script type="math/tex">t_{j \neq i}</script>) from $G_i$. That is the assumption that is relaxed by adaptor grammars.</p>
-
-<h3 id="pitman-yor-process">Pitman-Yor Process</h3>
-
-<p>The Pitman-Yor (PY) process is a simple extension of the <a href="https://en.wikipedia.org/wiki/Chinese_restaurant_process">Chinese restaurant process (CRP)</a> (the CRP is equivalent to the Dirichlet process, that we used previously in the <a href="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/">DPGMM</a>). </p>
-
-<p>Actually, similarly as the CRP maps to the Dirichlet process, the PY process maps to the Poisson-Dirichlet process. The CRP has only one concentration parameter $\alpha$ and creating new tables with probability $\frac{\alpha}{\alpha + N - 1}$. So for the CRP with $\delta_k$ the Kronecker delta function (Dirac distribution), $N$ datapoints, $M$ clusters, and $N_k$ datapoints in cluster $k$, we have:</p>
-
-<script type="math/tex; mode=display">
-z_{n+1} | z_1 \dots z_n \sim \frac{\alpha}{\alpha + N - 1}\delta_{M+1} + \sum_{k=1}^M \frac{N_{k}}{\alpha + N - 1}\delta_k
-</script>
-
-<p>The PY process has two parameters $a$ and $b$, $b$ playing the role of $\alpha$ (we get backt to the CRP is $a=0$), the probability of creating a new table is now $\frac{M.a + b}{N + b}$, so we have:</p>
-
-<script type="math/tex; mode=display">
-z_{n+1} | z_1 \dots z_n \sim \frac{M.a + b}{N + b} \delta_{M+1} + \sum_{k=1}^M \frac{N_{k} - a}{N + b}\delta_k
-</script>
-
-<h3 id="bayesian-nonparametrics-as-caching">Bayesian Nonparametrics as Caching</h3>
-
-<p>Now we will make a small detour to pinpoint the parallel between Bayesian non-parametrics (I’m thinking about the CRP and the PY process) and “caching” (keeping frequently accessed items where they can be quickly accessed). Take for instance the problem of learning the grammar of English from a <a href="http://en.wikipedia.org/wiki/Treebank">Treebank</a> (POS-tags annotated tree) dataset.</p>
-
-<p>The PCFG generative story to build a grammar: for all inputs, repeat:</p>
-
-<ul>
-  <li>Set <script type="math/tex">root(rule) = S</script>,</li>
-  <li>Pick a rule according to $P(rule | root(rule))$ and expands it,</li>
-  <li>Recursively pick rules (as above) and expand them until all leaves are terminal symbols (words).</li>
-</ul>
-
-<p>Notice that no context is used in the rule selection. </p>
-
-<p>Sure we can do better by adding context for the rule selection, but how? A good idea is to limit context to rules that we used so far. To quote Kevin Knight: “clearly this story of re-use is pervasive in natural language. Ask anyone named Zipf.” </p>
-
-<p>So let’s re-use the rules that we already used successfully. Here is the Bayesian nonparametrics tree substitution grammar (TSG) generative story, repeat:</p>
-
-<ul>
-  <li>Set <script type="math/tex">root(rule) = S</script>,</li>
-  <li>Pick a rule according to $P(rule | root(rule), counts\ of\ rules\ used)$ and expands it,</li>
-  <li>Recursively pick rules (as above) and expand them until all leaves are terminal symbols (words).</li>
-</ul>
-
-<p>How do we set-up $P(rule | root(rule), counts\ of\ rules\ used)$? We can simply mix between the rule probability and the rule uses history with a $\beta$ parameter:</p>
-
-<script type="math/tex; mode=display">
-P(rule | root(rule), rules\ use\ history) = \beta P_0(rule | root(rule)) \\
-+ (1-\beta) \frac{count(rule)}{\sum_{r \in rules\ with\ same\ root\ as\ rule} count(r\in cache)}
-</script>
-
-<p>All the same for adaptor grammars: as a PCFG can only learn the probability to for the rewrite $VP \rightarrow VB PP$, an adaptor grammar can learn (“cache”) the probability for a specific production $VP \rightarrow (VB climb) (P up) (NP)$.</p>
-
-<h3 id="adaptor-grammars">Adaptor Grammars</h3>
-
-<p>An adaptor C is a function which transforms a distribution into another with the same support. An adaptor grammar is a sextuple $(N, W, R, S, \theta, C)$, where $(N, W, R, S, \theta)$ is a PCFG and C is a vector of adaptors (indexed by N). </p>
-
-<p>For any rule $A \in N$, $C_A$ maps a distribution over trees $T_A$ to another distribution over the same trees.</p>
-
-<h3 id="pitman-yor-adaptor-grammars">Pitman-Yor Adaptor Grammars</h3>
-
-<h3 id="hierarchical-dirichlet-processes">Hierarchical Dirichlet Processes</h3>
-
-<p>Stay tuned for algorithms and for an implementation description.</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -543,10 +431,6 @@ P(B|A) = \frac{\sum_{C\in\{false,true\}} P(B|A,C)P(A)P(C)}{P(A)} & = P(\neg C)P(
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2013/03/19/adaptor-grammars/">Adaptor Grammars</a>
-      </li>
     
       <li class="post">
         <a href="/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/">Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models</a>

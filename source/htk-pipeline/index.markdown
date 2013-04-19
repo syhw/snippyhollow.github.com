@@ -111,14 +111,21 @@ On TIMIT, for phones recognition, the results I get are:
 I encourage everyone to give me their results so that I can update this page 
 with other datasets.
 
-### Alignment
+### Alignment and Forced Alignment
 
 If you want to get phones alignments with a trained model, you can simply do:
 
-    make align input_scp=PATH_TO_YOUR_DATASET_SCP_FILE output_mlf=ALIGNED_MLF
+    make reco_align input_scp=PATH_TO_SCP_FILE output_mlf=ALIGNED_MLF 
 
-and you will get the aligned phones in the `ALIGNED_MLF` file. However, keep 
-in mind that the results are only as good as your recognition rate!
+However, keep in mind that the results are only as good as your recognition 
+rate!
+
+If you have an input MLF with at least the phones, and possibly a "bad" 
+alignment, you can force align it with:
+
+    make align input_scp=PATH_TO_SCP_FILE output_mlf=ALIGNED_MLF input_mlf=PATH_TO_UNALIGNED_MLF
+
+and you will get the aligned phones in the `ALIGNED_MLF` file. 
 
 
 ### /!\ Warnings /!\

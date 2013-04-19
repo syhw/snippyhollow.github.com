@@ -317,15 +317,23 @@ art results.</p>
 <p>I encourage everyone to give me their results so that I can update this page 
 with other datasets.</p>
 
-<h3 id="alignment">Alignment</h3>
+<h3 id="recognition-alignment-and-forced-alignment">Recognition Alignment and Forced Alignment</h3>
 
 <p>If you want to get phones alignments with a trained model, you can simply do:</p>
 
-<pre><code>make align input_scp=PATH_TO_YOUR_DATASET_SCP_FILE output_mlf=ALIGNED_MLF
+<pre><code>make reco_align input_scp=PATH_TO_SCP_FILE output_mlf=ALIGNED_MLF 
 </code></pre>
 
-<p>and you will get the aligned phones in the <code>ALIGNED_MLF</code> file. However, keep 
-in mind that the results are only as good as your recognition rate!</p>
+<p>However, keep in mind that the results are only as good as your recognition 
+rate!</p>
+
+<p>If you have an input MLF with at least the phones, and possibly a “bad” 
+alignment, you can force align it with:</p>
+
+<pre><code>make align input_scp=PATH_TO_SCP_FILE output_mlf=ALIGNED_MLF input_mlf=PATH_TO_UNALIGNED_MLF
+</code></pre>
+
+<p>and you will get the aligned phones in the <code>ALIGNED_MLF</code> file. </p>
 
 <h3 id="warnings-">/!\ Warnings /!\</h3>
 

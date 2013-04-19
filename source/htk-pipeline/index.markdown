@@ -111,7 +111,7 @@ On TIMIT, for phones recognition, the results I get are:
 I encourage everyone to give me their results so that I can update this page 
 with other datasets.
 
-### Alignment and Forced Alignment
+### Recognition Alignment and Forced Alignment
 
 If you want to get phones alignments with a trained model, you can simply do:
 

@@ -104,7 +104,7 @@ Which means that $B$ has 80% chances to be true by following the strong syllogis
 Finally, contrary to prepositional logic, we _also_ get the weak syllogism (and I'll let you think it through):
 
 $$
-\frac{[A\Rightarrow B] \wedge A}{A\ becomes\ more\ plausible}
+\frac{[A\Rightarrow B] \wedge B}{A\ becomes\ more\ plausible}
 $$
 
 A similar derivation and observation can be done for [_modus tollens_](http://en.wikipedia.org/wiki/Modus_tollens).

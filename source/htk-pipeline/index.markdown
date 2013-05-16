@@ -99,12 +99,18 @@ On TIMIT, for phones recognition, the results I get are:
 | Mono 41       | mono Gaussian       | yes         | no          | yes         | 61.88         |               |
 | Mono 41       | 17 comp. GMM        | yes         | yes         | no          | 71.51         |               |
 | Mono 41       | 17 comp. GMM        | yes         | yes         | yes         | 71.81         |               |
-| Mono 62       | 17 comp. GMM        | yes         | yes         | no          | 66.70 / 75.22 | 46.32 / 37.90 |
-| Mono 62       | 17 comp. GMM        | yes         | yes         | yes         | 68.42 / 75.75 | 38.84 / 31.61 |
-| Tri           | mono Gaussian       | yes         | yes         | no          |               |               |
-| Tri           | mono Gaussian       | yes         | yes         | yes         |               |               |
-| Tri           | 17 comp. GMM        | yes         | yes         | no          |               |               |
-| Tri           | 17 comp. GMM        | yes         | yes         | yes         |               |               |
+|       |     |  |all tune sil|  |    |        |
+| | | | -p penalty & | | | |
+| | | | -s grammar factor | | | |
+| ------------- | ------------------- |:-----------:|:-----------:|:-----------:|:-------------:|:-------------:|
+| Mono 62       | 17 comp. GMM        | yes         | 0.0 & 0.0   | no          | 66.70 / 75.22 | 46.32 / 37.90 |
+| Mono 62       | 17 comp. GMM        | yes         | 0.0 & 0.0   | yes         | 68.42 / 75.75 | 38.84 / 31.61 |
+| Mono 62       | 17 comp. GMM        | yes         | 2.0 & 5.0   | yes         | 69.22 / 75.47 | 33.97 / 27.76 |
+| Mono 62       | 17 comp. GMM        | yes         | 4.0 & 5.0   | yes         | 69.67 / 75.99 | 34.06 / 27.80 |
+| Tri           | mono Gaussian       | yes         |             | no          |               |               |
+| Tri           | mono Gaussian       | yes         |             | yes         |               |               |
+| Tri           | 17 comp. GMM        | yes         |             | no          |               |               |
+| Tri           | 17 comp. GMM        | yes         |             | yes         |               |               |
 
 PER stands for Phone Error Rate, it is $\frac{correct - insert}{reference\ total}$.
 

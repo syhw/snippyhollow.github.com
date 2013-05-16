@@ -210,6 +210,7 @@ art results.</p>
       <th style="text-align: center">[tune sil]</th>
       <th style="text-align: center">[bigram LM]</th>
       <th style="text-align: center">[% correct]</th>
+      <th style="text-align: center">[% PER]</th>
     </tr>
   </thead>
   <tbody>
@@ -220,6 +221,7 @@ art results.</p>
       <td style="text-align: center">no</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">50.90</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 39</td>
@@ -228,6 +230,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">70.53</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 41</td>
@@ -236,6 +239,7 @@ art results.</p>
       <td style="text-align: center">no</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">60.29</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 41</td>
@@ -244,6 +248,7 @@ art results.</p>
       <td style="text-align: center">no</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">61.88</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 41</td>
@@ -252,6 +257,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">71.51</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 41</td>
@@ -260,6 +266,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">71.81</td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Mono 62</td>
@@ -268,6 +275,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center">66.70 / 75.22</td>
+      <td style="text-align: center">46.32 / 37.90</td>
     </tr>
     <tr>
       <td>Mono 62</td>
@@ -276,6 +284,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">68.42 / 75.75</td>
+      <td style="text-align: center">38.84 / 31.61</td>
     </tr>
     <tr>
       <td>Tri</td>
@@ -284,6 +293,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Tri</td>
@@ -291,6 +301,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
+      <td style="text-align: center"> </td>
       <td style="text-align: center"> </td>
     </tr>
     <tr>
@@ -300,6 +311,7 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">no</td>
       <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
     </tr>
     <tr>
       <td>Tri</td>
@@ -307,10 +319,13 @@ art results.</p>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
       <td style="text-align: center">yes</td>
+      <td style="text-align: center"> </td>
       <td style="text-align: center"> </td>
     </tr>
   </tbody>
 </table>
+
+<p>PER stands for Phone Error Rate, it is $\frac{correct - insert}{reference\ total}$.</p>
 
 <p>(66.70 / 75.22 means 66.70% correctness on 62 phones and 75.22% correctness by grouping the phones down to 39).</p>
 

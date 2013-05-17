@@ -91,26 +91,26 @@ art results.
 
 On TIMIT, for phones recognition, the results I get are:
 
-| [Phones]      | [Representation]    | [start/end] | [tune sil]  | [bigram LM] | [% correct]   | [% PER]       |
-| ------------- | ------------------- |:-----------:|:-----------:|:-----------:|:-------------:|:-------------:|
-| Mono 39       | mono Gaussian       | no          | no          | no          | 50.90         |               |
-| Mono 39       | 17 comp. GMM        | no          | yes         | no          | 70.53         |               |
-| Mono 41       | mono Gaussian       | yes         | no          | no          | 60.29         |               |
-| Mono 41       | mono Gaussian       | yes         | no          | yes         | 61.88         |               |
-| Mono 41       | 17 comp. GMM        | yes         | yes         | no          | 71.51         |               |
-| Mono 41       | 17 comp. GMM        | yes         | yes         | yes         | 71.81         |               |
-|       |     |  |all tune sil|  |    |        |
+| [Phones]      | [Representation]    | [tune sil] | [bigram LM] | [% correct]   | [% PER]       |
+| ------------- | ------------------- |:-----------:|:-----------:|:-------------:|:-------------:|
+| Mono 39       | mono Gaussian       |  no        | no          | 50.90         |               |
+| Mono 39       | 17 comp. GMM        |  yes       | no          | 70.53         |               |
+| Mono 41       | mono Gaussian       |  no        | no          | 60.29         |               |
+| Mono 41       | mono Gaussian       |  no        | yes         | 61.88         |               |
+| Mono 41       | 17 comp. GMM        |  yes       | no          | 71.51         |               |
+| Mono 41       | 17 comp. GMM        |  yes       | yes         | 71.81         |               |
+|       |     |  |all tune sil|  |    | 
 | | | | -p penalty & | | | |
 | | | | -s grammar factor | | | |
-| ------------- | ------------------- |:-----------:|:-----------:|:-----------:|:-------------:|:-------------:|
-| Mono 62       | 17 comp. GMM        | yes         | 0.0 & 0.0   | no          | 66.70 / 75.22 | 46.32 / 37.90 |
-| Mono 62       | 17 comp. GMM        | yes         | 0.0 & 0.0   | yes         | 68.42 / 75.75 | 38.84 / 31.61 |
-| Mono 62       | 17 comp. GMM        | yes         | 2.0 & 5.0   | yes         | 69.22 / 75.47 | 33.97 / 27.76 |
-| Mono 62       | 17 comp. GMM        | yes         | 4.0 & 5.0   | yes         | 69.67 / 75.99 | 34.06 / 27.80 |
-| Tri           | mono Gaussian       | yes         |             | no          |               |               |
-| Tri           | mono Gaussian       | yes         |             | yes         |               |               |
-| Tri           | 17 comp. GMM        | yes         |             | no          |               |               |
-| Tri           | 17 comp. GMM        | yes         |             | yes         |               |               |
+| ------------- | ------------------- |::----------:|:-----------:|:-------------:|:-------------:|
+| Mono 62       | 17 comp. GMM        |  0.0 & 0.0  | no          | 66.70 / 75.22 | 46.32 / 37.90 |
+| Mono 62       | 17 comp. GMM        |  0.0 & 0.0  | yes         | 68.42 / 75.75 | 38.84 / 31.61 |
+| Mono 62       | 17 comp. GMM        |  2.0 & 5.0  | yes         | 69.22 / 75.47 | 33.97 / 27.76 |
+| Mono 62       | 17 comp. GMM        |  4.0 & 5.0  | yes         | 69.67 / 75.99 | 34.06 / 27.80 |
+| Tri           | mono Gaussian       |             | no          |               |               |
+| Tri           | mono Gaussian       |             | yes         |               |               |
+| Tri           | 17 comp. GMM        |             | no          |               |               |
+| Tri           | 17 comp. GMM        |             | yes         |               |               |
 
 PER stands for Phone Error Rate, it is $\frac{correct - insert}{reference\ total}$.
 

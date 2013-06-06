@@ -26,11 +26,15 @@
     </url>
     <url>
         <loc>http://snippyhollow.github.com/htk-pipeline/</loc>
-        <lastmod>2013-05-17T09:23:24+02:00</lastmod>
+        <lastmod>2013-05-17T10:27:50+02:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/</loc>
         <lastmod>2013-04-30T17:41:48+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://snippyhollow.github.com/mathematics-in-pictures/</loc>
+        <lastmod>2013-06-06T12:01:13+02:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/robots.txt</loc>
@@ -39,5 +43,9 @@
     <url>
         <loc>http://snippyhollow.github.com/ssh-basics/</loc>
         <lastmod>2013-04-17T12:27:55+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://snippyhollow.github.com/todo/</loc>
+        <lastmod>2013-06-06T17:41:06+02:00</lastmod>
     </url>
 </urlset>

@@ -32,6 +32,7 @@ Pour Thomas:
     - posteriogrammes (tester Baum-Welch et Viterbi post) sur la base d'Allen 
     -> scores par taches ABX/ABX-C/ABX-L  
  * port HDF5 wrapper to Python
+ * Numenta's HTM benchmark (base Allen?)
 
 
 HTK pipeline:

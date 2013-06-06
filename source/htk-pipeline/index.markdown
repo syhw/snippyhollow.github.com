@@ -106,6 +106,7 @@ On TIMIT, for phones recognition, the results I get are:
 | Mono 62       | 17 comp. GMM        |  0.0 & 0.0  | no          | 66.70 / 75.22 | 46.32 / 37.90 |
 | Mono 62       | 17 comp. GMM        |  0.0 & 0.0  | yes         | 68.42 / 75.75 | 38.84 / 31.61 |
 | Mono 62       | 17 comp. GMM        |  2.0 & 5.0  | yes         | 69.22 / 75.47 | 33.97 / 27.76 |
+| Mono 62       | 17 comp. GMM        |  2.5 & 5.0  | yes         | 69.34 / 75.62 | 33.94 / 27.72 |
 | Mono 62       | 17 comp. GMM        |  4.0 & 5.0  | yes         | 69.67 / 75.99 | 34.06 / 27.80 |
 | Tri           | mono Gaussian       |             | no          |               |               |
 | Tri           | mono Gaussian       |             | yes         |               |               |

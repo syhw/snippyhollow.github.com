@@ -89,7 +89,7 @@ art results.
 
 ### Results you can expect
 
-On TIMIT, for phones recognition, the results I get are:
+On TIMIT (with MFCC 0 D A), for phones recognition, the results I get are:
 
 | [Phones]      | [Representation]    | [tune sil] | [bigram LM] | [% correct]   | [% PER]       |
 | ------------- | ------------------- |:-----------:|:-----------:|:-------------:|:-------------:|

@@ -35,6 +35,12 @@ Pour Thomas:
  * Numenta's HTM benchmark (base Allen?)
 
 
+Kaldi pipeline:
+ 
+ * Evaluate
+ * s/GMM/DBM
+
+
 HTK pipeline:
 
  * triphones
@@ -73,9 +79,11 @@ Bayesian Nonparametrics:
 
  * implem DP K-means Jordan et al.
  * HDP with bootstraping of the latent 
- * boostraping for DP(G)MM clusters
+ * bootstrapping for DP(G)MM clusters (done, write-up)
+ * bootstrapping for DPGMM with different hyper-parameters (and see what sticks)
  * Gaussian processes + Bayesian bandits for psycho XPs
  * Bandits, Bandits everywhere
+ * DP-DBN (DP stacked RBM for "phones" clustering and recognition to start with)
 
 
 Modeling team journal club:

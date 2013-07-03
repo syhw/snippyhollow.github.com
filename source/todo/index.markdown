@@ -31,14 +31,12 @@ Pour Thomas:
     http://hear.ai.uiuc.edu/public/Corpus/LDC/DOC/LDC_symbols.pdf  
     - posteriogrammes (tester Baum-Welch et Viterbi post) sur la base d'Allen 
     -> scores par taches ABX/ABX-C/ABX-L  
- * port HDF5 wrapper to Python
- * Numenta's HTM benchmark (base Allen?)
+ * Numenta's HTM benchmark (sur base Allen?)
 
 
 Kaldi pipeline:
  
- * Evaluate
- * s/GMM/DBM
+ * test switchboard s5b local DNN recipee
 
 
 HTK pipeline:
@@ -68,11 +66,16 @@ Pour Mathilde:
  * correlation bouba-kiki in vision/audio
 
 
+Pour Léo:
+
+ * GP for replacing QUEST and staircases
+ * bandits pour online re-calibration
+
+
 Pour thèse:
 
  * écrire article journal
- * updates about review paper?
- * review AIIDE papers
+
 
 
 Bayesian Nonparametrics:
@@ -84,6 +87,7 @@ Bayesian Nonparametrics:
  * Gaussian processes + Bayesian bandits for psycho XPs
  * Bandits, Bandits everywhere
  * DP-DBN (DP stacked RBM for "phones" clustering and recognition to start with)
+ * DPGMM avec 1 classe = mixture de plusieurs gaussiennes ? (comme en classif., i.e. comme en GMM pour HMM en speech recog.)
 
 
 Modeling team journal club:

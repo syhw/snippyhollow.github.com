@@ -63,7 +63,10 @@ Pour Isabelle:
 
 Pour Mathilde:
 
- * correlation bouba-kiki in vision/audio
+ * correlation BoubaKiki: lancer analysis.py après avoir calculé les
+   tilt-shifts après RASTA-PLP au lieu de simple spectrogram
+ * faire un modèle machine learning (Random Forest ? ElasticNet ?) sur toutes
+   les features (+ sélection features ? PCA ?)
 
 
 Pour Léo:

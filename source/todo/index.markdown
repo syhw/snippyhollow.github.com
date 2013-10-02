@@ -7,41 +7,14 @@ sharing: true
 footer: true
 ---
 
-(CHILDES) Davis corpus:
-
- * couper ceux avec un timestamp \d\d\d\d\d
- * regarder SNR (et pruner)
- * calculer les formants
- * aligner des fenetres (constant / noyaux vocaliques), ou essayer forced
-  alignment
- * demander l'inversion à VLAM ou au modèle de Raphaël
- * synthétiser son ?
-
-
-Corpus Lalevée (annoté avec places):
-
- * à partir des annotations (phonétiques) -> dériver places / features
-  phonétiques
-
-
 Pour Thomas:
 
  * pipe ABX et base Allen avec modèle train par timit:  
-    - map TIMIT vers Allen symbols' 
-    http://hear.ai.uiuc.edu/public/Corpus/LDC/DOC/LDC_symbols.pdf  
+    - <s>map TIMIT vers Allen symbols' http://hear.ai.uiuc.edu/public/Corpus/LDC/DOC/LDC_symbols.pdf </s> [our map](http://cogito.ens.fr/dokuwiki/doku.php?id=science:teams:models:translatephoneticsymbols)
     - posteriogrammes (tester Baum-Welch et Viterbi post) sur la base d'Allen 
     -> scores par taches ABX/ABX-C/ABX-L  
- * Numenta's HTM benchmark (sur base Allen?)
-
-
-Kaldi pipeline:
- 
- * test switchboard s5b local DNN recipee
-
-
-HTK pipeline:
-
- * triphones
+ * <s>port HDF5 wrapper to Python</s> [PyTables](http://www.pytables.org/moin)
+ * DTW implem pour ABX 2.0
 
 
 Currently:
@@ -56,23 +29,14 @@ Currently:
 
 Pour Isabelle:
 
- * Haghighi et al. unsupervised POS-tagging
+ * <s>Haghighi et al. unsupervised POS-tagging</s>
  * iHMM POS-tagging
  * our model
 
 
 Pour Mathilde:
 
- * correlation BoubaKiki: lancer analysis.py après avoir calculé les
-   tilt-shifts après RASTA-PLP au lieu de simple spectrogram
- * faire un modèle machine learning (Random Forest ? ElasticNet ?) sur toutes
-   les features (+ sélection features ? PCA ?)
-
-
-Pour Léo:
-
- * GP for replacing QUEST and staircases
- * bandits pour online re-calibration
+ * correlation bouba-kiki in vision/audio
 
 
 Pour thèse:
@@ -80,23 +44,19 @@ Pour thèse:
  * écrire article journal
 
 
-
 Bayesian Nonparametrics:
 
  * implem DP K-means Jordan et al.
  * HDP with bootstraping of the latent 
- * bootstrapping for DP(G)MM clusters (done, write-up)
- * bootstrapping for DPGMM with different hyper-parameters (and see what sticks)
+ * boostraping for DP(G)MM clusters
  * Gaussian processes + Bayesian bandits for psycho XPs
  * Bandits, Bandits everywhere
- * DP-DBN (DP stacked RBM for "phones" clustering and recognition to start with)
- * DPGMM avec 1 classe = mixture de plusieurs gaussiennes ? (comme en classif., i.e. comme en GMM pour HMM en speech recog.)
 
 
 Modeling team journal club:
 
  * implement VB DPGMM
- * adaptor grammars
+ * implement adaptor grammars
 
 
 Cloverfeed:
@@ -107,6 +67,9 @@ Cloverfeed:
  * implem double Gibbs LDA (Mimno et al.)
  * distances between words knowing their topics distribs,
  and topics knowing their words distrib => match topics after re-training
+ * smart shell (reading stdout + simple Laplace smoothing learning)
+ * smart calendar
+ * online smart email client (using gmail API)
 
 
 Probabilistic programming:

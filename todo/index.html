@@ -9,7 +9,7 @@
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Todo Jun 6th, 2013 (CHILDES) Davis corpus: couper ceux avec un timestamp \d\d\d\d\d regarder SNR (et pruner) calculer les formants aligner des &hellip;">
+  <meta name="description" content="Todo Jun 6th, 2013 Pour Thomas: pipe ABX et base Allen avec modèle train par timit: map TIMIT vers Allen symbols&#8217; http://hear.ai.uiuc.edu/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,49 +110,24 @@
 <time datetime="2013-06-06T17:18:00+02:00" pubdate data-updated="true">Jun 6<span>th</span>, 2013</time></p>
   </header>
   
-  <p>(CHILDES) Davis corpus:</p>
-
-<ul>
-  <li>couper ceux avec un timestamp \d\d\d\d\d</li>
-  <li>regarder SNR (et pruner)</li>
-  <li>calculer les formants</li>
-  <li>aligner des fenetres (constant / noyaux vocaliques), ou essayer forced
-  alignment</li>
-  <li>demander l’inversion à VLAM ou au modèle de Raphaël</li>
-  <li>synthétiser son ?</li>
-</ul>
-
-<p>Corpus Lalevée (annoté avec places):</p>
-
-<ul>
-  <li>à partir des annotations (phonétiques) -&gt; dériver places / features
-  phonétiques</li>
-</ul>
-
-<p>Pour Thomas:</p>
+  <p>Pour Thomas:</p>
 
 <ul>
   <li>pipe ABX et base Allen avec modèle train par timit:<br />
     <ul>
-      <li>map TIMIT vers Allen symbols’ 
- http://hear.ai.uiuc.edu/public/Corpus/LDC/DOC/LDC_symbols.pdf  </li>
+      <li>
+        <s>map TIMIT vers Allen symbols&#8217; http://hear.ai.uiuc.edu/public/Corpus/LDC/DOC/LDC_symbols.pdf </s>
+        <p><a href="http://cogito.ens.fr/dokuwiki/doku.php?id=science:teams:models:translatephoneticsymbols">our map</a></p>
+      </li>
       <li>posteriogrammes (tester Baum-Welch et Viterbi post) sur la base d’Allen 
  -&gt; scores par taches ABX/ABX-C/ABX-L  </li>
     </ul>
   </li>
-  <li>Numenta’s HTM benchmark (sur base Allen?)</li>
-</ul>
-
-<p>Kaldi pipeline:</p>
-
-<ul>
-  <li>test switchboard s5b local DNN recipee</li>
-</ul>
-
-<p>HTK pipeline:</p>
-
-<ul>
-  <li>triphones</li>
+  <li>
+    <s>port HDF5 wrapper to Python</s>
+    <p><a href="http://www.pytables.org/moin">PyTables</a></p>
+  </li>
+  <li>DTW implem pour ABX 2.0</li>
 </ul>
 
 <p>Currently:</p>
@@ -172,7 +147,9 @@
 <p>Pour Isabelle:</p>
 
 <ul>
-  <li>Haghighi et al. unsupervised POS-tagging</li>
+  <li>
+    <s>Haghighi et al. unsupervised POS-tagging</s>
+  </li>
   <li>iHMM POS-tagging</li>
   <li>our model</li>
 </ul>
@@ -180,17 +157,7 @@
 <p>Pour Mathilde:</p>
 
 <ul>
-  <li>correlation BoubaKiki: lancer analysis.py après avoir calculé les
-tilt-shifts après RASTA-PLP au lieu de simple spectrogram</li>
-  <li>faire un modèle machine learning (Random Forest ? ElasticNet ?) sur toutes
-les features (+ sélection features ? PCA ?)</li>
-</ul>
-
-<p>Pour Léo:</p>
-
-<ul>
-  <li>GP for replacing QUEST and staircases</li>
-  <li>bandits pour online re-calibration</li>
+  <li>correlation bouba-kiki in vision/audio</li>
 </ul>
 
 <p>Pour thèse:</p>
@@ -204,19 +171,16 @@ les features (+ sélection features ? PCA ?)</li>
 <ul>
   <li>implem DP K-means Jordan et al.</li>
   <li>HDP with bootstraping of the latent </li>
-  <li>bootstrapping for DP(G)MM clusters (done, write-up)</li>
-  <li>bootstrapping for DPGMM with different hyper-parameters (and see what sticks)</li>
+  <li>boostraping for DP(G)MM clusters</li>
   <li>Gaussian processes + Bayesian bandits for psycho XPs</li>
   <li>Bandits, Bandits everywhere</li>
-  <li>DP-DBN (DP stacked RBM for “phones” clustering and recognition to start with)</li>
-  <li>DPGMM avec 1 classe = mixture de plusieurs gaussiennes ? (comme en classif., i.e. comme en GMM pour HMM en speech recog.)</li>
 </ul>
 
 <p>Modeling team journal club:</p>
 
 <ul>
   <li>implement VB DPGMM</li>
-  <li>adaptor grammars</li>
+  <li>implement adaptor grammars</li>
 </ul>
 
 <p>Cloverfeed:</p>
@@ -228,6 +192,9 @@ les features (+ sélection features ? PCA ?)</li>
   <li>implem double Gibbs LDA (Mimno et al.)</li>
   <li>distances between words knowing their topics distribs,
  and topics knowing their words distrib =&gt; match topics after re-training</li>
+  <li>smart shell (reading stdout + simple Laplace smoothing learning)</li>
+  <li>smart calendar</li>
+  <li>online smart email client (using gmail API)</li>
 </ul>
 
 <p>Probabilistic programming:</p>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ssh basics - Exchangeable random experiments</title>
+  <title>politics - Exchangeable random experiments</title>
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Ssh Basics Apr 17th, 2013 Public key authentication You can easily generate a private/public key pair by typing: ssh-keygen -t rsa If you do not set &hellip;">
+  <meta name="description" content="Politics Feb 4th, 2014 I’m a pragmatic subjectivist left libertarianist, why? Liberty does not just mean individual liberty (that I cherish), it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://snippyhollow.github.com/ssh-basics/">
+  <link rel="canonical" href="http://snippyhollow.github.com/politics/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -94,7 +94,7 @@
 <article role="article">
   
   <header>
-    <h1 class="entry-title">Ssh Basics</h1>
+    <h1 class="entry-title">Politics</h1>
     <p class="meta">
 
 
@@ -107,50 +107,25 @@
   
 
 
-<time datetime="2013-04-17T12:08:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time></p>
+<time datetime="2014-02-04T13:25:00+01:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time></p>
   </header>
   
-  <h3 id="public-key-authentication">Public key authentication</h3>
+  <p>I’m a pragmatic subjectivist left libertarianist, why?</p>
 
-<p>You can easily generate a private/public key pair by typing:</p>
+<p>Liberty does not just mean individual liberty (that I cherish), it also means liberty of the choice. Biases of social-economic background are to be fought back by access to education, shelter, food, healthcare. Only when everybody can leave decently will we be able to harness the power of all the brains of humanity towards positive endeavors. </p>
 
-<pre><code>ssh-keygen -t rsa
-</code></pre>
+<p>Libertarianism with the existence of corporations is nothing else than feudalism, because corporations are just dictatorships made from thin air. Chomsky (2004). p. 739. “The term ‘libertarian’ as used in the U.S. means something quite different from what it meant historically and still means in the rest of the world. Historically, the libertarian movement has been the anti-statist wing of the socialist movement. Socialist anarchism was libertarian socialism. In the U.S., which is a society much more dominated by business, the term has a different meaning. It means eliminating or reducing state controls, mainly controls over private tyrannies. Libertarians in the U.S. don’t say, Let’s get rid of corporations. It is a sort of ultra-rightism.”</p>
 
-<p>If you do not set a passphrase during the generation, you will be able to 
-login without having to type a password. How so? You have to copy the content 
-of <code>~/.ssh/id_rsa.pub</code> (<code>~</code> meaning your home folder) on the other machine you 
-want to log to in <code>~/.ssh/authorized_keys</code> (by default). 
-Say you are on machine <code>A</code> and log on to <code>B</code>, do the 
-<code>ssh-keygen</code> command above on machine <code>A</code> and put the public key (ending in 
-<code>.pub</code>) on machine <code>B</code>. WARNING: you should <em>never</em> let the private key (the 
-one not ending in <code>.pub</code>) leave machine <code>A</code>. You can put the public key where 
-ever you want (even on public internet sites). There is a command to directly 
-copy the public key and set the right files authorizations for you:</p>
+<p>I am against intellectual property, because we are all “standing on the shoulder of giants”. On this topic, I am particularly aligned with Lawrence Lessig and Aaron Swartz.</p>
 
-<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub remote-host
-</code></pre>
+<p>The anarcho-capitalist (or, worse, Ayn Randism) may work for white males in their 20-30s.</p>
 
-<p>With remote-host being how you login to machine <code>B</code>. What? You are still 
-loging in often to the same machine by typing <code>ssh username@ipaddress</code>?</p>
+<p>“None are more hopelessly enslaved than those who falsely believe they are free” Johann Wolfgang von Goethe</p>
 
-<h3 id="ssh-config">SSH config</h3>
+<p>PS: Transhumanist? Maybe (depends on the execution). I fear the 2nd law of thermodynamics as much as Asimov did.</p>
 
-<p>So with public key authentication, you are way safer than using a password 
-(which is easier to crack than 8 letters alpha-numeric passwords). Now for the 
-easiness of use, the ssh client (on machine <code>A</code>) uses a config file, 
-whose default path is <code>.ssh/config</code>. You can put all the servers you log to 
-inside like that (one <code>Host=</code> and its following paragraph per server):</p>
-
-<pre><code>Host=habilis
-Hostname=HABILIS_IP_HERE
-User=MY_USER_ON_HABILIS_HERE
-IdentityFile=~/.ssh/habilis 
-</code></pre>
-
-<p>The last line is optional and is used because I use a specific ssh 
-private/public keypair for habilis. The path to the key that you should put 
-here is for the <em>private</em> key (on machine <code>A</code>).</p>
+<p><a href="https://news.ycombinator.com/item?id=7176028">Libertarianism on HN #1</a>
+<a href="http://jimleff.blogspot.fr/2011/06/how-i-outgrew-libertarianism.html">How I Outgrew Libertarianism</a></p>
 
 
   
@@ -169,13 +144,13 @@ here is for the <em>private</em> key (on machine <code>A</code>).</p>
   
 
 
-<time datetime="2013-04-17T12:08:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time>
+<time datetime="2014-02-04T13:25:00+01:00" pubdate data-updated="true">Feb 4<span>th</span>, 2014</time>
         
       </p>
       
         <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/ssh-basics/index.html" data-via="syhw" data-counturl="http://snippyhollow.github.com/ssh-basics/index.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/politics/index.html" data-via="syhw" data-counturl="http://snippyhollow.github.com/politics/index.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>

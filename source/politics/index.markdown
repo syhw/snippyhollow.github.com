@@ -14,7 +14,7 @@ THIS IS A DRAFT OF THOUGHTS.
 I'm a pragmatic subjectivist left libertarianist, why?
 
 
-Liberty does not just mean individual liberty (that I cherish), it also means liberty of the choice. Biases of social-economic background are to be fought back by access to education, shelter, food, healthcare. Only when everybody can leave decently will we be able to harness the power of all the brains of humanity towards positive endeavors. 
+Liberty does not just mean individual liberty (that I cherish), it also means liberty of choice. Biases of social-economic background are to be fought back by access to education, shelter, food, healthcare. Only when everybody can leave decently will we be able to harness the power of all the brains of humanity towards positive endeavors. 
 
 
 Libertarianism with the existence of corporations is nothing else than feudalism, because corporations are just dictatorships made from thin air. Chomsky (2004). p. 739. "The term 'libertarian' as used in the U.S. means something quite different from what it meant historically and still means in the rest of the world. Historically, the libertarian movement has been the anti-statist wing of the socialist movement. Socialist anarchism was libertarian socialism. In the U.S., which is a society much more dominated by business, the term has a different meaning. It means eliminating or reducing state controls, mainly controls over private tyrannies. Libertarians in the U.S. don't say, Let's get rid of corporations. It is a sort of ultra-rightism."

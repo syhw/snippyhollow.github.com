@@ -7,7 +7,9 @@ sharing: true
 footer: true
 ---
 
-I'm a post-doc in Paris at [LSCP](http://www.lscp.net/index.php?lang=en) on the [Bootphon ERC project](http://www.lscp.net/persons/dupoux/bootphon/). Previously, I did a [PhD](http://tel.archives-ouvertes.fr/tel-00780635) on [Bayesian modeling applied to video games AI](http://emotion.inrialpes.fr/people/synnaeve/) at University of Grenoble, [E-Motion team at INRIA](https://team.inria.fr/e-motion/en), and [LPPA at Collège de France](http://www.lppa.college-de-france.fr/EN/index.htm).
+I'm a post-doc in Paris at [LSCP](http://www.lscp.net/index.php?lang=en) on the [Bootphon ERC project](http://www.lscp.net/persons/dupoux/bootphon/). 
+
+Previously, I did a [PhD](http://tel.archives-ouvertes.fr/tel-00780635) on [Bayesian modeling applied to video games AI](http://emotion.inrialpes.fr/people/synnaeve/) at University of Grenoble, [E-Motion team at INRIA](https://team.inria.fr/e-motion/en), and [LPPA at Collège de France](http://www.lppa.college-de-france.fr/EN/index.htm). All my Ph.D work on StarCraft (and datasets) can be found on [my old website at INRIA](http://emotion.inrialpes.fr/people/synnaeve/).
 
 I'm also on:
 
@@ -16,3 +18,4 @@ I'm also on:
  - [Facebook](http://www.facebook.com/gabriel.synnaeve)
  - [Pinboard](http://pinboard.in/u:syhw)
  - [Github](http://pinboard.in/u:syhw)
+ - [Google Scholar](http://scholar.google.fr/citations?user=wN9rBkcAAAAJ&hl=fr)

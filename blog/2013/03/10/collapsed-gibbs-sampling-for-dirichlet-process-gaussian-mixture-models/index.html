@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models - Exchangeable random experiments</title>
+  <meta name="author" content="syhw">
+
+  
+  <meta name="description" content="I really enjoyed the pedagogy of Edwin Chen’s introduction to infinite mixture models, but I was a little disappointed that it does not go as far as &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Exchangeable random experiments" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38472185-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath: [ ['$', '$'] ],
+            displayMath: [ ['$$', '$$']],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        },
+        messageStyle: "none",
+        "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Exchangeable random experiments</a></h1>
+  
+    <h2>blog += 1</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:snippyhollow.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T15:44:00+01:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I really enjoyed the pedagogy of <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">Edwin Chen’s introduction to infinite mixture models</a>, but I was a little disappointed that it does not go as far as presenting the details of the Dirichlet process Gaussian mixture model (DPGMM), as he uses <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">sklearn’s variational Bayes DPGMM implementation</a>. </p>
+
+<p>For this reason, I will try and give here sufficient information to implement a DPGMM with collapsed Gibbs sampling. This is not an <a href="http://www.is.tuebingen.mpg.de/fileadmin/user_upload/files/publications/GoeRas10_[0].pdf">in-depth evaluation of which conjugate priors to use</a>, nor an analysis of the <a href="http://www.stat.duke.edu/courses/Spring06/sta376/Support/Mixtures/Escobar.West.1995.pdf">parameters</a> and <a href="ftp://dce.hut.edu.vn/vinhlt/Papers/GMM/Infinite%20GMM.pdf">hyper-parameters</a> (that should have their own priors! ;)).</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+<p>On Dirichlet processes, Chinese Restaurant processes, Indian Buffet processes, there is <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">the excellent blog post by Edwin Chen</a>. Another excellent introduction to Dirichlet processes is provided by <a href="http://www.ee.washington.edu/research/guptalab/publications/UWEETR-2010-0006.pdf">Frigyik, Kapila and Gupta</a>.</p>
+
+<p>If you lack some knowledge about clustering or density estimation (unsupervised learning), you can read Chapters 20 (p. 284) to (at least) 22 of <a href="http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521642981&amp;linkCode=as2&amp;tag=syhwsblog-20">MacKay’s ITILA</a>, that you can find as a <a href="http://www.inference.phy.cam.ac.uk/itila/book.html">free ebook</a>; or chapter 9 of <a href="http://www.amazon.com/gp/product/0387310738/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0387310738&amp;linkCode=as2&amp;tag=syhwsblog-20">Bishop’s PRML</a>. As a refresher, the <a href="https://en.wikipedia.org/wiki/Mixture_model">Wikipedia article on mixture models</a>, and <a href="http://scikit-learn.org/stable/modules/mixture.html">the sklearn documentation on GMM</a> are more efficient.</p>
+
+<h3 id="dpgmm-the-model">DPGMM: the model</h3>
+
+<p>Let’s say we have $N$ observations and $K$ clusters, $i \in [1\dots N]$ is the indice for the observations, while $k \in [1\dots K]$ is the indice for the clusters. With $z_i$ the cluster assignment of observation $x_i$, and $\theta_k$ the parameter of mixture $k$:</p>
+
+<script type="math/tex; mode=display">
+P(x_{1:N}) = \prod_{i=1}^N \sum_{k=1}^K P(x_i|\theta_{z_i}) P(z_i=k)
+</script>
+
+<p>So, the generative story of a DPGMM is as follows:</p>
+
+<p>$\pi \sim Stick(\alpha)$ (mixing rates)<br />
+$z_i \sim \pi$ (cluster assignments)<br />
+$\theta_k \sim H(\lambda)$ (parameters)<br />
+$x_i \sim F(\theta_{z_i})$ (values)   </p>
+
+<h3 id="fitting-the-data">Fitting the data</h3>
+<p>Notation: </p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\begin{align}
+& z_{-i} = \{z_j | j \neq i\}\\
+& x = x_{1:N}\\
+& k^*\mathrm{\ is\ a\ new\ cluster}\\
+& x_{-i,c} = \{x_j | z_j = c, j \neq i\}\\
+& N_{k,-i} = card(x_{-i,c})
+\end{align}
+ %]]></script>
+
+<p>Let’s decompose the probability that the observation $i$ belongs to cluster $k$ into its two independent factors:</p>
+
+<script type="math/tex; mode=display">
+P(z_i = k | z_{-i}, x, \alpha, \lambda) \propto P(z_i = k | z_{-i}, \alpha)P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda)
+</script>
+
+<p>Then:</p>
+
+<script type="math/tex; mode=display">
+\boxed{P(z_i = k | z_{-i}, \alpha) = \left\{ 
+\begin{array}{l}
+\frac{N_{k,-i}}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{has\ been\ seen\ before}\\
+\frac{\alpha}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{is\ a\ new\ cluster}\\
+\end{array}
+    \right.}
+</script>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) = P(x_i | x_{-i,k}, \lambda) = \frac{P(x_i, x_{-i, k}, \lambda)}{P(x_{-i,k}|\lambda)}
+</script>
+
+<script type="math/tex; mode=display">
+\boxed{P(x_i, x_{-i, k}, \lambda) = \int P(x_i | \theta_k)\left[\prod_{j \neq i, z_j = k}P(x_j | \theta_k)\right] H(\theta_k | \lambda) d\theta_k}
+</script>
+
+<p>is the marginal likelihood of all the data assigned to cluster $k$, including $i$.</p>
+
+<p>If $z_i = k^*$ (new cluster) then:</p>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k^*, z_{-i}, \lambda) = \boxed{P(x_i | \lambda) = \int P(x_i | \theta)H(\theta | \lambda) d\theta}
+</script>
+
+<h3 id="conjugate-priors">Conjugate priors</h3>
+
+<p>Now we should choose $H$ for it to be conjugate to $F$ and have easy to compute parameters posterior. As we want $F$ to be multivariate normal: we can look on <a href="http://en.wikipedia.org/wiki/Conjugate_prior">Wikipedia’s page of conjugate priors</a> under multivariate normal with unknown $\mu$ and $\Sigma$ to see that $H$ should be normal-inverse-Wishart with prior parameters:</p>
+
+<ul>
+  <li>$\mu_0$ initial mean guess [In my code further, I set it to the mean of whole the dataset.]</li>
+  <li>$\kappa_0$ mean fraction (smoothing parameter) [A common value is 1. I set it to 0.]</li>
+  <li>$\nu_0$ degrees of freedom [I set it to the number of dimensions.]</li>
+  <li>$\Psi_0$ pairwise deviation product (matrix) [I set it to $10 \times I_d$ ($I_d$ is the $d\times d$ identity matrix). Indentity matrix makes this prior Gaussian circular, the $10$ factor should be dependant on the dataset, for instance on the mean distance between points.]</li>
+</ul>
+
+<p>This gives us MAP estimates on parameters, for <em>one</em> of the clusters:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\begin{align}
+& \mu_n = \frac{\kappa_0 \mu_0 + n\tilde{x}}{\kappa_0 +n} = \mu\\
+& \kappa_n = \kappa_0 + n\\
+& \nu_n = \nu_0 + n \\
+& \Psi_n = \Psi_0 + C + \frac{\kappa_0 n}{\kappa_0 + n}(\tilde{x} - \mu_0)(\tilde{x} - \mu_0)^T\\
+& \Sigma = \frac{\kappa_n + 1}{\kappa_n * (\nu_n - d + 1)}\Psi_n
+\end{align}
+ %]]></script>
+
+<p>with $\tilde{x}$ the sample mean and $C=\sum_{i=1}^n (x_i-\tilde{x})(x_i-\tilde{x})^T$.</p>
+
+<p>Set $\kappa_{0} = 0$ to have no effect of the prior on the posterior mean. 
+This reduces to MLE estimates if:</p>
+
+<script type="math/tex; mode=display">
+\kappa_{0} = 0, \nu_{0} = d, \|\Psi_{0}\| = 0
+</script>
+
+<p>So now we can compute the posterior predictive for cluster $k$ evaluated at $x_i$</p>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) \propto \mathcal{N}(\mu_{k,-i}, \Sigma_{k,-i})
+</script>
+
+<h3 id="collapsed-gibbs-sampling">Collapsed Gibbs sampling</h3>
+
+<p>Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of <a href="http://www.stat.purdue.edu/~rdutta/24.PDF">Neal’s seminal paper</a>:</p>
+
+<pre><code>while (not converged on mus and sigmas):
+    for each i = 1 : N in random order do:
+        remove x[i]'s sufficient statistics from old cluster z[i]
+        if any cluster is empty, remove it and decrease K
+        for each k = 1 : K do
+            compute P_k(x[i]) = P(x[i] | x[-i]=k)
+            N[k,-i] = dim(x[-i]=k)
+            compute P(z[i]=k | z[-i], Data) = N[k,-i] / (alpha + N - 1)
+        compute P*(x[i]) = P(x[i] | lambda)
+        compute P(z[i]=* | z[-i], Data) = alpha / (alpha + N - 1)
+        normalize P(z[i] | ...)
+        sample z[i] from P(z[i] | ...)
+        add x[i]'s sufficient statistics to new cluster z[i]
+        (possibly increase K)
+</code></pre>
+
+<h3 id="results">Results</h3>
+
+<p>Here is the result of our implementation of collapsed Gibbs sampling DPGMM compared to scikit-learn’s implementation of <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">variational Bayes DPGMM</a>:</p>
+
+<p><img src="https://dl.dropbox.com/u/14035465/pictures/DPGMM.png" /></p>
+
+<h3 id="code">Code</h3>
+
+<p>Here is my quick-and-dirty code implementing this version of Gibbs sampling for DPGMM. You may want to comment out scikit-learn (that I used for the comparison above) if you do not have it installed.</p>
+
+<div><script src="https://gist.github.com/5128969.js"></script>
+<noscript><pre><code /></pre></noscript></div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">syhw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T15:44:00+01:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bayesian/'>Bayesian</a>, <a class='category' href='/blog/categories/dirichlet-process/'>Dirichlet process</a>, <a class='category' href='/blog/categories/gibbs-sampling/'>Gibbs sampling</a>, <a class='category' href='/blog/categories/mixture-models/'>mixture models</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/" data-via="syhw" data-counturl="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/08/from-hacks-to-bayesian-probability/" title="Previous Post: From hacks to Bayesian probability">&laquo; From hacks to Bayesian probability</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/">Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/08/from-hacks-to-bayesian-probability/">From hacks to Bayesian probability</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/SnippyHolloW">@SnippyHolloW</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'SnippyHolloW',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("syhw", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/syhw" class="twitter-follow-button" data-show-count="false">Follow @syhw</a>
+  
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:syhw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "syhw"; //id target for pinboard list
+  var pinboard_count = 5; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - syhw -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

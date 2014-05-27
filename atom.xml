@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2014-03-26T13:34:08+01:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[syhw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models]]></title>
+    <link href="http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/"/>
+    <updated>2013-03-10T15:44:00+01:00</updated>
+    <id>http://snippyhollow.github.com/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models</id>
+    <content type="html"><![CDATA[<p>I really enjoyed the pedagogy of <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">Edwin Chen’s introduction to infinite mixture models</a>, but I was a little disappointed that it does not go as far as presenting the details of the Dirichlet process Gaussian mixture model (DPGMM), as he uses <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">sklearn’s variational Bayes DPGMM implementation</a>. </p>
+
+<p>For this reason, I will try and give here sufficient information to implement a DPGMM with collapsed Gibbs sampling. This is not an <a href="http://www.is.tuebingen.mpg.de/fileadmin/user_upload/files/publications/GoeRas10_[0].pdf">in-depth evaluation of which conjugate priors to use</a>, nor an analysis of the <a href="http://www.stat.duke.edu/courses/Spring06/sta376/Support/Mixtures/Escobar.West.1995.pdf">parameters</a> and <a href="ftp://dce.hut.edu.vn/vinhlt/Papers/GMM/Infinite%20GMM.pdf">hyper-parameters</a> (that should have their own priors! ;)).</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+<p>On Dirichlet processes, Chinese Restaurant processes, Indian Buffet processes, there is <a href="http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/">the excellent blog post by Edwin Chen</a>. Another excellent introduction to Dirichlet processes is provided by <a href="http://www.ee.washington.edu/research/guptalab/publications/UWEETR-2010-0006.pdf">Frigyik, Kapila and Gupta</a>.</p>
+
+<p>If you lack some knowledge about clustering or density estimation (unsupervised learning), you can read Chapters 20 (p. 284) to (at least) 22 of <a href="http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521642981&amp;linkCode=as2&amp;tag=syhwsblog-20">MacKay’s ITILA</a>, that you can find as a <a href="http://www.inference.phy.cam.ac.uk/itila/book.html">free ebook</a>; or chapter 9 of <a href="http://www.amazon.com/gp/product/0387310738/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0387310738&amp;linkCode=as2&amp;tag=syhwsblog-20">Bishop’s PRML</a>. As a refresher, the <a href="https://en.wikipedia.org/wiki/Mixture_model">Wikipedia article on mixture models</a>, and <a href="http://scikit-learn.org/stable/modules/mixture.html">the sklearn documentation on GMM</a> are more efficient.</p>
+
+<h3 id="dpgmm-the-model">DPGMM: the model</h3>
+
+<p>Let’s say we have $N$ observations and $K$ clusters, $i \in [1\dots N]$ is the indice for the observations, while $k \in [1\dots K]$ is the indice for the clusters. With $z_i$ the cluster assignment of observation $x_i$, and $\theta_k$ the parameter of mixture $k$:</p>
+
+<script type="math/tex; mode=display">
+P(x_{1:N}) = \prod_{i=1}^N \sum_{k=1}^K P(x_i|\theta_{z_i}) P(z_i=k)
+</script>
+
+<p>So, the generative story of a DPGMM is as follows:</p>
+
+<p>$\pi \sim Stick(\alpha)$ (mixing rates)<br />
+$z_i \sim \pi$ (cluster assignments)<br />
+$\theta_k \sim H(\lambda)$ (parameters)<br />
+$x_i \sim F(\theta_{z_i})$ (values)   </p>
+
+<h3 id="fitting-the-data">Fitting the data</h3>
+<p>Notation: </p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+& z_{-i} = \{z_j | j \neq i\}\\
+& x = x_{1:N}\\
+& k^*\mathrm{\ is\ a\ new\ cluster}\\
+& x_{-i,c} = \{x_j | z_j = c, j \neq i\}\\
+& N_{k,-i} = card(x_{-i,c})
+\end{align}
+ %]]&gt;</script>
+
+<p>Let’s decompose the probability that the observation $i$ belongs to cluster $k$ into its two independent factors:</p>
+
+<script type="math/tex; mode=display">
+P(z_i = k | z_{-i}, x, \alpha, \lambda) \propto P(z_i = k | z_{-i}, \alpha)P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda)
+</script>
+
+<p>Then:</p>
+
+<script type="math/tex; mode=display">
+\boxed{P(z_i = k | z_{-i}, \alpha) = \left\{ 
+\begin{array}{l}
+\frac{N_{k,-i}}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{has\ been\ seen\ before}\\
+\frac{\alpha}{\alpha + N - 1} \mathrm{\ if\ }k\ \mathrm{is\ a\ new\ cluster}\\
+\end{array}
+    \right.}
+</script>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) = P(x_i | x_{-i,k}, \lambda) = \frac{P(x_i, x_{-i, k}, \lambda)}{P(x_{-i,k}|\lambda)}
+</script>
+
+<script type="math/tex; mode=display">
+\boxed{P(x_i, x_{-i, k}, \lambda) = \int P(x_i | \theta_k)\left[\prod_{j \neq i, z_j = k}P(x_j | \theta_k)\right] H(\theta_k | \lambda) d\theta_k}
+</script>
+
+<p>is the marginal likelihood of all the data assigned to cluster $k$, including $i$.</p>
+
+<p>If $z_i = k^*$ (new cluster) then:</p>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k^*, z_{-i}, \lambda) = \boxed{P(x_i | \lambda) = \int P(x_i | \theta)H(\theta | \lambda) d\theta}
+</script>
+
+<h3 id="conjugate-priors">Conjugate priors</h3>
+
+<p>Now we should choose $H$ for it to be conjugate to $F$ and have easy to compute parameters posterior. As we want $F$ to be multivariate normal: we can look on <a href="http://en.wikipedia.org/wiki/Conjugate_prior">Wikipedia’s page of conjugate priors</a> under multivariate normal with unknown $\mu$ and $\Sigma$ to see that $H$ should be normal-inverse-Wishart with prior parameters:</p>
+
+<ul>
+  <li>$\mu_0$ initial mean guess [In my code further, I set it to the mean of whole the dataset.]</li>
+  <li>$\kappa_0$ mean fraction (smoothing parameter) [A common value is 1. I set it to 0.]</li>
+  <li>$\nu_0$ degrees of freedom [I set it to the number of dimensions.]</li>
+  <li>$\Psi_0$ pairwise deviation product (matrix) [I set it to $10 \times I_d$ ($I_d$ is the $d\times d$ identity matrix). Indentity matrix makes this prior Gaussian circular, the $10$ factor should be dependant on the dataset, for instance on the mean distance between points.]</li>
+</ul>
+
+<p>This gives us MAP estimates on parameters, for <em>one</em> of the clusters:</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+& \mu_n = \frac{\kappa_0 \mu_0 + n\tilde{x}}{\kappa_0 +n} = \mu\\
+& \kappa_n = \kappa_0 + n\\
+& \nu_n = \nu_0 + n \\
+& \Psi_n = \Psi_0 + C + \frac{\kappa_0 n}{\kappa_0 + n}(\tilde{x} - \mu_0)(\tilde{x} - \mu_0)^T\\
+& \Sigma = \frac{\kappa_n + 1}{\kappa_n * (\nu_n - d + 1)}\Psi_n
+\end{align}
+ %]]&gt;</script>
+
+<p>with $\tilde{x}$ the sample mean and $C=\sum_{i=1}^n (x_i-\tilde{x})(x_i-\tilde{x})^T$.</p>
+
+<p>Set $\kappa_{0} = 0$ to have no effect of the prior on the posterior mean. 
+This reduces to MLE estimates if:</p>
+
+<script type="math/tex; mode=display">
+\kappa_{0} = 0, \nu_{0} = d, \|\Psi_{0}\| = 0
+</script>
+
+<p>So now we can compute the posterior predictive for cluster $k$ evaluated at $x_i$</p>
+
+<script type="math/tex; mode=display">
+P(x_i | x_{-i}, z_i=k, z_{-i}, \lambda) \propto \mathcal{N}(\mu_{k,-i}, \Sigma_{k,-i})
+</script>
+
+<h3 id="collapsed-gibbs-sampling">Collapsed Gibbs sampling</h3>
+
+<p>Here is the pseudo-code of collapsed Gibbs sampling adapted from algorithm 3 of <a href="http://www.stat.purdue.edu/~rdutta/24.PDF">Neal’s seminal paper</a>:</p>
+
+<pre><code>while (not converged on mus and sigmas):
+    for each i = 1 : N in random order do:
+        remove x[i]'s sufficient statistics from old cluster z[i]
+        if any cluster is empty, remove it and decrease K
+        for each k = 1 : K do
+            compute P_k(x[i]) = P(x[i] | x[-i]=k)
+            N[k,-i] = dim(x[-i]=k)
+            compute P(z[i]=k | z[-i], Data) = N[k,-i] / (alpha + N - 1)
+        compute P*(x[i]) = P(x[i] | lambda)
+        compute P(z[i]=* | z[-i], Data) = alpha / (alpha + N - 1)
+        normalize P(z[i] | ...)
+        sample z[i] from P(z[i] | ...)
+        add x[i]'s sufficient statistics to new cluster z[i]
+        (possibly increase K)
+</code></pre>
+
+<h3 id="results">Results</h3>
+
+<p>Here is the result of our implementation of collapsed Gibbs sampling DPGMM compared to scikit-learn’s implementation of <a href="http://scikit-learn.org/stable/modules/mixture.html#dpgmm-classifier-infinite-gaussian-mixtures">variational Bayes DPGMM</a>:</p>
+
+<p><img src="https://dl.dropbox.com/u/14035465/pictures/DPGMM.png" /></p>
+
+<h3 id="code">Code</h3>
+
+<p>Here is my quick-and-dirty code implementing this version of Gibbs sampling for DPGMM. You may want to comment out scikit-learn (that I used for the comparison above) if you do not have it installed.</p>
+
+<div><script src="https://gist.github.com/5128969.js"></script>
+<noscript><pre><code /></pre></noscript></div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[From hacks to Bayesian probability]]></title>
+    <link href="http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability/"/>
+    <updated>2013-03-08T18:58:00+01:00</updated>
+    <id>http://snippyhollow.github.com/blog/2013/03/08/from-hacks-to-bayesian-probability</id>
+    <content type="html"><![CDATA[<p>In which we look at two pragmatic hacks that lead to the Bayesian approach of probabilities, when pushed further and added as constraints.</p>
+
+<h2 id="coinflips">Coinflips</h2>
+
+<p>Let’s say we have a coin, and we want to decide if it’s fair. We throw it $N$ times and we get $m$ heads, we can code heads=1, tails=0. With $\mu$ the ratio of heads:</p>
+
+<script type="math/tex; mode=display"> 
+P(m | N, \mu) = Binomial(m|N,\mu) = \binom{N}{m} \mu^m (1-\mu)^{N-m}
+</script>
+
+<h3 id="maximum-likelihood">Maximum likelihood</h3>
+<p>How do we set $\mu$? We could maximize the probability of the data that we saw under our model, that is maximizing the <em>likelihood</em>. Let’s say that $D = {x_1 \dots x_N}$, then we have:</p>
+
+<script type="math/tex; mode=display">
+P(D|\mu) = \prod_{n=1}^N P(x_n|\mu) = \prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}
+</script>
+
+<p>The maximum of this function of $\mu$ is reached for $\mu= \frac{m}{N}$. The problem arises if we have little data (in fact, when we have data that does not cover the whole space of possible data). If $D=(1,1,1)$, the maximum likelihood estimate of $\mu$ will be $1.0$. It means that we predict that <em>all</em> the tosses will land on heads, after only three observations!</p>
+
+<h3 id="smoothing">Smoothing</h3>
+
+<p>A classical hack is to smooth the maximum likelihood estimate by adding “fake data”, we could consider that we already saw the coin land on heads and tails once, before getting our data. This way, before (“prior to”) the experiment, we would have $\mu=1/2=0.5$. After (<em>posterior</em> to) our experiment, taking the data into account, we would have $\mu = (3+1)/(3+2) = 0.8$. How do we set the these prior coin flips (smoothing parameters)?</p>
+
+<h3 id="maximum-a-posteriori">Maximum A Posteriori</h3>
+
+<p>The <em>right way</em> to encode this prior knowledge is to put a probability distribution on the parameter $\mu$. As $\mu$ is a ratio, we should have a continuous distribution on $[0, 1]$ that can represent a whole range of prior belief on what the coin’s ratio of heads is. For these reasons, a sensible choice is the Beta distribution:</p>
+
+<script type="math/tex; mode=display">
+Beta(\mu|a, b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \mu^{a-1}(1-\mu)^{b-1}
+</script>
+
+<p>On Wikpedia, we can check how the $Beta(x|\alpha, \beta)$ distribution looks like:</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Beta_distribution_pdf.svg/639px-Beta_distribution_pdf.svg.png" alt="Plots of the Beta distribution" /></p>
+
+<p>Now we can compute again what is the <em>posterior</em> value of $\mu$ knowing the data $D$ and the prior Beta ($\propto$ means “proportional to”):</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+P(\mu | a_0, b_0, D) & \propto P(D|\mu)P(\mu|a_0, b_0)\\
+                    & \propto \left( \prod_{n=1}^N \mu^{x_n} (1-\mu)^{1-x_n} \right) Beta(\mu | a_0, b_0)
+\end{align}
+ %]]&gt;</script>
+
+<p>Hopefully, the Beta distribution is the conjugate prior for the Bernouilli and binomial distributions, and thus a bit of calculus reduces it to:</p>
+
+<script type="math/tex; mode=display">
+P(\mu | a_0, b_0, D) \propto Beta(\mu|a_N, b_N)\\
+a_N = a_0 + m\\
+b_N = b_0 + (N-m)
+</script>
+
+<p>We can compute that, when $N \rightarrow \infty$, the expectation of $\mu$: $\mathbb{E}[\mu] = \mu_{ML}$, as:</p>
+
+<script type="math/tex; mode=display">
+\mathbb{E} [\mu | a_0, b_0, D] = \frac{a_N}{b_N}
+</script>
+
+<h3 id="first-conclusion">First conclusion</h3>
+
+<p>This approach of using a prior on the parameters of the distributions that are essential to our model (the predicting distribution) is central to the Bayesian approach of building models. It makes the model robust to what can happen, even though we had few data. It makes it easier to reason about our prior assumptions that simply “adding unseen data”, and it yields in the presence of more data.</p>
+
+<p>If you’re interested about Bayesian modeling, there are plenty of very good textbooks. My prefered gradual introduction is <a href="http://www.amazon.com/gp/product/0521642981/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521642981&amp;linkCode=as2&amp;tag=syhwsblog-20">MacKay’s ITILA</a>, that you can find as a <a href="http://www.inference.phy.cam.ac.uk/itila/book.html">free ebook</a>.</p>
+
+<h2 id="causality">Causality</h2>
+
+<p>Now here is another hack for logical reasoning, that leads to Bayesian probabilities. Let’s say that you want to express that an event $A$ entails an event $B$, in logic you would write $A \Rightarrow B$. We will be abusing the notation $A=[A=true]$ and $\neg A=[A=false]$. Now with the <a href="http://en.wikipedia.org/wiki/Modus_ponens"><em>modus ponens</em></a>, you can deduce $B$ whenever $A$ is true.</p>
+
+<script type="math/tex; mode=display">
+\frac{[A\Rightarrow B] \wedge A}{B}
+</script>
+
+<h3 id="plausible-reasoning">Plausible reasoning</h3>
+
+<p>Now, we want to extend prepositional logic to <em>plausible reasoning</em>, in which we can have degrees of probability that rules are true; or degrees of belief in these rules and facts. A pragmatic way to do that is to introduce the variable $C$ which represents $A \Rightarrow B$, that is: if $P(C)=p$, there is a probability $p$ that $A \Rightarrow B$. Then, this previous <em>modus ponens</em> translates to:</p>
+
+<script type="math/tex; mode=display">
+P(B|A,C) = \frac{P(A|B,C)P(B|C)}{P(A|C)}\ (Bayes'\ theorem)\\
+P(B|A,C)=\frac{P(A,B|C)}{P(A|C)}\ (Product\ rule)
+</script>
+
+<p>And actually, as $P(A,B|C)=P(A|C)$, we have $P(B|A,C)=1$, which corresponds to the strong syllogism of <em>modus ponens</em>. </p>
+
+<p>So now, if we are only 80% sure of $C$, we can write $P(C) = 0.8$ and seek for $P(B|A)$ (we are 100% sure of A):</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+\begin{align}
+P(B|A) = \frac{\sum_{C\in\{false,true\}} P(B|A,C)P(A)P(C)}{P(A)} & = P(\neg C)P(B|A,\neg C) + P(C)P(B|A,C)\\
+& = 0.2*x(\in [0,1]) + 0.8*1.0 \geq 0.8
+\end{align}
+ %]]&gt;</script>
+
+<p>Which means that $B$ has 80% chances to be true by following the strong syllogism of modus ponens, but it can also be true even though $C=false$.</p>
+
+<p>Finally, contrary to prepositional logic, we <em>also</em> get the weak syllogism (and I’ll let you think it through):</p>
+
+<script type="math/tex; mode=display">
+\frac{[A\Rightarrow B] \wedge B}{A\ becomes\ more\ plausible}
+</script>
+
+<p>A similar derivation and observation can be done for <a href="http://en.wikipedia.org/wiki/Modus_tollens"><em>modus tollens</em></a>.</p>
+
+<h3 id="cox-jaynes-theorem">Cox-Jaynes theorem</h3>
+
+<p>A reasoning mechanism needs to be consistent (one cannot prove $A$ and $\neg A$ at the same time). For plausible reasoning, consistency means: a) all the possible ways to reach a conclusion leads to the same result, b) information cannot be ignored, c) two equal states of knowledge have the same plausibilities. Adding consistency to plausible reasoning leads to <a href="http://en.wikipedia.org/wiki/Cox's_theorem">Cox’s theorem</a>, which derives the laws of probability (the product-rule and the sum-rule). So, the degrees of belief of any consistent induction mechanism verify Kolmogorov’s axioms.</p>
+
+<h3 id="second-and-last-conclusion">Second and last conclusion</h3>
+
+<p>With plausible reasoning, we get all the benefits of prepositional logic, but we can also reason with/about facts and rules that are not 100% true. We have another example of how a pragmatical (sensical) hack to extend logic to “degrees of beliefs” (probabilities) leads to Bayesian probabilities. </p>
+
+<p>If you are interested by learning about plausible reasonning, you can <a href="http://emotion.inrialpes.fr/people/synnaeve/phdthesis/phdthesis.html#x1-590003.2">look at my thesis</a>, or, better yet, read it directly from one of the masters in <a href="http://www.amazon.com/gp/product/0521592712/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=0521592712&amp;linkCode=as2&amp;tag=syhwsblog-20">Jayne’s Probability Theory: The Logic of Science</a> for which the pre-print is <a href="http://www-biba.inrialpes.fr/Jaynes/prob.html">there</a>.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

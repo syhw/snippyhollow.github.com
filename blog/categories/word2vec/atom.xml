@@ -4,7 +4,7 @@
   <title><![CDATA[Category: word2vec | Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/blog/categories/word2vec/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-05-28T00:41:44+02:00</updated>
+  <updated>2014-05-28T00:44:17+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -24,7 +24,7 @@ vector spaces that behave as we ask of them!<sup id="fnref:1"><a href="#fn:1" re
 
 <h3 id="xyz2vec">xyz2vec</h3>
 
-<p>A few months ago, I toyed with <a href="http://radimrehurek.com/gensim/models/word2vec.html">“word2vec”</a> (<a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a>) in gensim on a lot of stuff. One of them were phonetic annotations of speech corpora. Basically, a word2vec model is a one hidden layer neural network trained with backpropagation of a loss based on either predicting the central word given its neighbors (continuous bag-of-word) or predicting the neighbors given the central word. This can be applied to corpora of continuous text of words, but anything that has neightboring structure really. So I ran word2vec on phonetic and phonemic datasets (TIMIT and Buckeye), with a window of 5 phone(me)s (+/- 2 around the central one) and both skip-grams (SG) and continuous bag-of-words (CBOW). For all the following results, I used an embedding dimension of 10, so it is “contractive” compared to the number of phone(me)s (39). I tried with 100 dimensions and this gave very similar results, so this does not seem to matter. All the code to reproduce these results is <a href="https://github.com/SnippyHolloW/speech_embeddings">here</a>.</p>
+<p>A few months ago, I toyed with <a href="http://radimrehurek.com/gensim/models/word2vec.html">“word2vec”</a> (<a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a>) in gensim on a lot of stuff. One of them were phonetic annotations of speech corpora. Basically, a word2vec model is a one hidden layer neural network trained with backpropagation of a loss based on a) either predicting the central word given its neighbors (continuous bag-of-word), or b) predicting the neighbors given the central word (skip-gram). This can be applied to corpora of continuous text of words, but anything that has neightboring structure really. So I ran word2vec on phonetic and phonemic datasets (TIMIT and Buckeye), with a window of 5 phone(me)s (+/- 2 around the central one) and both skip-grams (SG) and continuous bag-of-words (CBOW). For all the following results, I used an embedding dimension of 10, so it is “contractive” compared to the number of phone(me)s (39). I tried with 100 dimensions and this gave very similar results, so this does not seem to matter. All the code to reproduce these results is <a href="https://github.com/SnippyHolloW/speech_embeddings">here</a>.</p>
 
 <h2 id="phone2vec">phone2vec</h2>
 

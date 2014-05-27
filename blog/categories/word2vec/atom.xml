@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: word2vec | Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/blog/categories/word2vec/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2014-05-28T00:40:28+02:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[syhw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[phn2vec embeddings]]></title>
+    <link href="http://snippyhollow.github.com/blog/2014/05/27/phn2vec-embeddings/"/>
+    <updated>2014-05-27T21:00:00+02:00</updated>
+    <id>http://snippyhollow.github.com/blog/2014/05/27/phn2vec-embeddings</id>
+    <content type="html"><![CDATA[<p>Several months ago, I started thinking in terms of embeddings for everything,
+let’s forget about discrete/categorical values and replace everything with
+vector spaces that behave as we ask of them!<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<h3 id="xyz2vec">xyz2vec</h3>
+
+<p>A few months ago, I toyed with <a href="http://radimrehurek.com/gensim/models/word2vec.html">“word2vec”</a> <a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a> in gensim on a lot of stuff. One of them were phonetic annotations of speech corpora. Basically, a word2vec model is a one hidden layer neural network trained with backpropagation of a loss based on either predicting the central word given its neighbors (continuous bag-of-word) or predicting the neighbors given the central word. This can be applied to corpora of continuous text of words, but anything that has neightboring structure really. So I ran word2vec on phonetic and phonemic datasets (TIMIT and Buckeye), with a window of 5 phone(me)s (+/- 2 around the central one) and both skip-grams (SG) and continuous bag-of-words (CBOW). For all the following results, I used an embedding dimension of 10, so it is “contractive” compared to the number of phone(me)s (39). I tried with 100 dimensions and this gave very similar results, so this does not seem to matter. All the code to reproduce these results is <a href="https://github.com/SnippyHolloW/speech_embeddings">here</a>.</p>
+
+<h2 id="phone2vec">phone2vec</h2>
+
+<p>Using <a href="https://catalog.ldc.upenn.edu/LDC93S1">TIMIT</a> phonetic annotations here are the similarity matrices of phones (SG left and CBOW right):</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_similarity_sg_left_cbow_right.png"></p>
+
+<p>If we do a 2 dimensional <a href="http://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html">isomap projection</a> of the skip-grams, we can see 3 clusters of vowels, (mainly) plosives (stop consonants) and other consonants (some fricatives, nasals..).<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_isomap_sg.png"></p>
+
+<p>An isomap of the CBOW gives roughly the same clusters:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_isomap_cbow.png"></p>
+
+<p>Contrary to the TIMIT corpus (read sentences that were designed for phonetic variability and effects), the <a href="http://buckeyecorpus.osu.edu/">Buckeye</a> is a corpus of conversational speech. We find the same (but a little bit weaker) clusters, e.g. in an isomap of skip-grams:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/buckeye_phones_isomap_sg.png"></p>
+
+<h2 id="read-speech-vs-conversational-speech">read speech vs. conversational speech</h2>
+
+<p>To the extent that the Buckeye and TIMIT corpus have slightly different phonetic annotations (and different annotations quality too), we can try and compare read speech vs. conversational speech. Here we plot the difference of the similarity matrices between one and the other (SG left, CBOW right). The biggest difference is in silences vs. stop-consonants:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_vs_buckeye_phones_similarity_sg_left_cbow_right.png"></p>
+
+<h2 id="phoneme2vec">phoneme2vec</h2>
+
+<p>What about phonemic annotation (phonemes from the word-level transcription)? Here are the similarity matrices (SG left, CBOW right):</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_words_similarity_sg_left_cbow_right.png"></p>
+
+<p>We still have the clusters of consonants vs vowels in the isomap of the skip-gram:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_words_isomap_sg.png"></p>
+
+<p>and of the CBOW</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_words_isomap_cbow.png"></p>
+
+<p>but we have much lesser distinctions between front and back consonants as well as nasals and stop. That’s obvious, because phonotactics are not accounted for in the phonemic transcription that I did.</p>
+
+<h2 id="phonetic-vs-phonemic">phonetic vs. phonemic</h2>
+
+<p>We already know that speech (phonetics) and this “higher level” (phonemic) representation differ, how do they differ in this embedding?</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_vs_words%28phonemes%29_similarity_sg_left_cbow_right.png"></p>
+
+<p>That’s all folks! Currently, I worked only on English datasets. That would be fun to see what comes up for other languages.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>There are several interesting papers about turning text into emdeddings that have useful properties. Picking a few: from classical nature language processing tasks done only with vector spaces (and neural networks) (<a href="http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35671.pdf">Collobert et al. 2011</a>), to semantic spaces for multi-relational data (<a href="http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf">Bordes et al. 2013</a>). The recent “word2vec” (<a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a>) from Google spiked interest from the NLP community, and it quickly got implemented in <a href="http://radimrehurek.com/gensim/">gensim</a> (if you want to geek out the implementation, I recommend the <a href="http://radimrehurek.com/2013/09/word2vec-in-python-part-two-optimizing/">excellent blog post about its optimisation</a>).<a href="#fnref:1" rel="reference">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="https://en.wikipedia.org/wiki/Consonant#Features">Wikipedia provides some phonetics 101 of consonants</a>.<a href="#fnref:2" rel="reference">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+]]></content>
+  </entry>
+  
+</feed>

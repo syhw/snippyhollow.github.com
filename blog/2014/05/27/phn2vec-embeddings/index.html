@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>phn2vec embeddings - Exchangeable random experiments</title>
+  <meta name="author" content="syhw">
+
+  
+  <meta name="description" content="Several months ago, I started thinking in terms of embeddings for everything,
+let’s forget about discrete/categorical values and replace everything &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://snippyhollow.github.com/blog/2014/05/27/phn2vec-embeddings/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Exchangeable random experiments" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38472185-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath: [ ['$', '$'] ],
+            displayMath: [ ['$$', '$$']],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        },
+        messageStyle: "none",
+        "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Exchangeable random experiments</a></h1>
+  
+    <h2>blog += 1</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:snippyhollow.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Phn2vec Embeddings</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-27T21:00:00+02:00" pubdate data-updated="true">May 27<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Several months ago, I started thinking in terms of embeddings for everything,
+let’s forget about discrete/categorical values and replace everything with
+vector spaces that behave as we ask of them!<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<h3 id="xyz2vec">xyz2vec</h3>
+
+<p>A few months ago, I toyed with <a href="http://radimrehurek.com/gensim/models/word2vec.html">“word2vec”</a> <a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a> in gensim on a lot of stuff. One of them were phonetic annotations of speech corpora. Basically, a word2vec model is a one hidden layer neural network trained with backpropagation of a loss based on either predicting the central word given its neighbors (continuous bag-of-word) or predicting the neighbors given the central word. This can be applied to corpora of continuous text of words, but anything that has neightboring structure really. So I ran word2vec on phonetic and phonemic datasets (TIMIT and Buckeye), with a window of 5 phone(me)s (+/- 2 around the central one) and both skip-grams (SG) and continuous bag-of-words (CBOW). For all the following results, I used an embedding dimension of 10, so it is “contractive” compared to the number of phone(me)s (39). I tried with 100 dimensions and this gave very similar results, so this does not seem to matter. All the code to reproduce these results is <a href="https://github.com/SnippyHolloW/speech_embeddings">here</a>.</p>
+
+<h2 id="phone2vec">phone2vec</h2>
+
+<p>Using <a href="https://catalog.ldc.upenn.edu/LDC93S1">TIMIT</a> phonetic annotations here are the similarity matrices of phones (SG left and CBOW right):</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_similarity_sg_left_cbow_right.png" /></p>
+
+<p>If we do a 2 dimensional <a href="http://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html">isomap projection</a> of the skip-grams, we can see 3 clusters of vowels, (mainly) plosives (stop consonants) and other consonants (some fricatives, nasals..).<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_isomap_sg.png" /></p>
+
+<p>An isomap of the CBOW gives roughly the same clusters:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_isomap_cbow.png" /></p>
+
+<p>Contrary to the TIMIT corpus (read sentences that were designed for phonetic variability and effects), the <a href="http://buckeyecorpus.osu.edu/">Buckeye</a> is a corpus of conversational speech. We find the same (but a little bit weaker) clusters, e.g. in an isomap of skip-grams:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/buckeye_phones_isomap_sg.png" /></p>
+
+<h2 id="read-speech-vs-conversational-speech">read speech vs. conversational speech</h2>
+
+<p>To the extent that the Buckeye and TIMIT corpus have slightly different phonetic annotations (and different annotations quality too), we can try and compare read speech vs. conversational speech. Here we plot the difference of the similarity matrices between one and the other (SG left, CBOW right). The biggest difference is in silences vs. stop-consonants:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_vs_buckeye_phones_similarity_sg_left_cbow_right.png" /></p>
+
+<h2 id="phoneme2vec">phoneme2vec</h2>
+
+<p>What about phonemic annotation (phonemes from the word-level transcription)? Here are the similarity matrices (SG left, CBOW right):</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_words_similarity_sg_left_cbow_right.png" /></p>
+
+<p>We still have the clusters of consonants vs vowels in the isomap of the skip-gram:</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_words_isomap_sg.png" /></p>
+
+<p>and of the CBOW</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_words_isomap_cbow.png" /></p>
+
+<p>but we have much lesser distinctions between front and back consonants as well as nasals and stop. That’s obvious, because phonotactics are not accounted for in the phonemic transcription that I did.</p>
+
+<h2 id="phonetic-vs-phonemic">phonetic vs. phonemic</h2>
+
+<p>We already know that speech (phonetics) and this “higher level” (phonemic) representation differ, how do they differ in this embedding?</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_vs_words%28phonemes%29_similarity_sg_left_cbow_right.png" /></p>
+
+<p>That’s all folks! Currently, I worked only on English datasets. That would be fun to see what comes up for other languages.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>There are several interesting papers about turning text into emdeddings that have useful properties. Picking a few: from classical nature language processing tasks done only with vector spaces (and neural networks) (<a href="http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35671.pdf">Collobert et al. 2011</a>), to semantic spaces for multi-relational data (<a href="http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf">Bordes et al. 2013</a>). The recent “word2vec” (<a href="http://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. 2013</a>) from Google spiked interest from the NLP community, and it quickly got implemented in <a href="http://radimrehurek.com/gensim/">gensim</a> (if you want to geek out the implementation, I recommend the <a href="http://radimrehurek.com/2013/09/word2vec-in-python-part-two-optimizing/">excellent blog post about its optimisation</a>).<a href="#fnref:1" rel="reference">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p><a href="https://en.wikipedia.org/wiki/Consonant#Features">Wikipedia provides some phonetics 101 of consonants</a>.<a href="#fnref:2" rel="reference">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">syhw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-27T21:00:00+02:00" pubdate data-updated="true">May 27<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/embeddings/'>embeddings</a>, <a class='category' href='/blog/categories/gensim/'>gensim</a>, <a class='category' href='/blog/categories/phonemic-transcription/'>phonemic transcription</a>, <a class='category' href='/blog/categories/phonetics/'>phonetics</a>, <a class='category' href='/blog/categories/speech-recognition/'>speech recognition</a>, <a class='category' href='/blog/categories/word2vec/'>word2vec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/blog/2014/05/27/phn2vec-embeddings/" data-via="syhw" data-counturl="http://snippyhollow.github.com/blog/2014/05/27/phn2vec-embeddings/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/" title="Previous Post: Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models">&laquo; Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/27/phn2vec-embeddings/">phn2vec embeddings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/collapsed-gibbs-sampling-for-dirichlet-process-gaussian-mixture-models/">Collapsed Gibbs Sampling for Dirichlet Process Gaussian Mixture Models</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/08/from-hacks-to-bayesian-probability/">From hacks to Bayesian probability</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/SnippyHolloW">@SnippyHolloW</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'SnippyHolloW',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("syhw", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/syhw" class="twitter-follow-button" data-show-count="false">Follow @syhw</a>
+  
+</section>
+
+
+<section>
+  <h1>My Pinboard</h1>
+  <ul id="pinboard_linkroll">Fetching linkroll...</ul>
+  <p><a href="http://pinboard.in/u:syhw">My Pinboard Bookmarks &raquo;</a></p>
+</section>
+<script type="text/javascript">
+  var linkroll = 'pinboard_linkroll'; //id target for pinboard list
+  var pinboard_user = "syhw"; //id target for pinboard list
+  var pinboard_count = 5; //id target for pinboard list
+  (function(){
+    var pinboardInit = document.createElement('script');
+    pinboardInit.type = 'text/javascript';
+    pinboardInit.async = true;
+    pinboardInit.src = '/javascripts/pinboard.js';
+    document.getElementsByTagName('head')[0].appendChild(pinboardInit);
+  })();
+</script>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - syhw -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

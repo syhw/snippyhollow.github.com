@@ -10,15 +10,22 @@ Following [my previous blog post on phn2vec](http://snippyhollow.github.io/blog/
 
 ## Phonetic annotation
 
+
 ### 2 biclusters
+
+We clearly see consonants vs. vowels.
 
 {% img https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_2_biclusters.png %}
 
 ### 4 biclusters
 
+We clearly see a separation in the place (+nasals) in the consonants. Silences get their own cluster.
+
 {% img https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_4_biclusters.png %}
 
 ### 6 biclusters
+
+Fricatives and nasals get their own clusters.
 
 {% img https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_6_biclusters.png %}
  

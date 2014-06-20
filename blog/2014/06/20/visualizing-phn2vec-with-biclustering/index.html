@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: gensim - Exchangeable random experiments</title>
+  <title>Visualizing phn2vec with biclustering - Exchangeable random experiments</title>
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Category: gensim">
+  <meta name="description" content="Following my previous blog post on phn2vec, I used scikit-learn’s biclustering to make the similarity matrices more readable. So here are some quick &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://snippyhollow.github.com/blog/categories/gensim/">
+  <link rel="canonical" href="http://snippyhollow.github.com/blog/2014/06/20/visualizing-phn2vec-with-biclustering/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -91,49 +91,117 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Gensim</h1>
+    
+      <h1 class="entry-title">Visualizing Phn2vec With Biclustering</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T12:17:00+02:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Following <a href="http://snippyhollow.github.io/blog/2014/05/27/phn2vec-embeddings/">my previous blog post on phn2vec</a>, I used <a href="http://scikit-learn.org/stable/modules/biclustering.html">scikit-learn’s biclustering</a> to make the similarity matrices more readable. So here are some quick results for TIMIT:</p>
 
-  
-  <h2>2014</h2>
+<h2 id="phonetic-annotation">Phonetic annotation</h2>
 
-<article>
-  
-<h1><a href="/blog/2014/06/20/visualizing-phn2vec-with-biclustering/">Visualizing phn2vec with biclustering</a></h1>
-<time datetime="2014-06-20T12:17:00+02:00" pubdate><span class='month'>Jun</span> <span class='day'>20</span> <span class='year'>2014</span></time>
+<h3 id="biclusters">2 biclusters</h3>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/biclustering/'>biclustering</a>, <a class='category' href='/blog/categories/embeddings/'>embeddings</a>, <a class='category' href='/blog/categories/gensim/'>gensim</a>, <a class='category' href='/blog/categories/phonemic-transcription/'>phonemic transcription</a>, <a class='category' href='/blog/categories/phonetics/'>phonetics</a>, <a class='category' href='/blog/categories/sklearn/'>sklearn</a>, <a class='category' href='/blog/categories/speech-recognition/'>speech recognition</a>, <a class='category' href='/blog/categories/word2vec/'>word2vec</a></span>
-</footer>
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_2_biclusters.png" /></p>
 
+<h3 id="biclusters-1">4 biclusters</h3>
 
-</article>
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_4_biclusters.png" /></p>
 
+<h3 id="biclusters-2">6 biclusters</h3>
 
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_6_biclusters.png" /></p>
 
-<article>
-  
-<h1><a href="/blog/2014/05/27/phn2vec-embeddings/">phn2vec embeddings</a></h1>
-<time datetime="2014-05-27T21:00:00+02:00" pubdate><span class='month'>May</span> <span class='day'>27</span> <span class='year'>2014</span></time>
+<h2 id="phonemic-transcription">Phonemic transcription</h2>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/embeddings/'>embeddings</a>, <a class='category' href='/blog/categories/gensim/'>gensim</a>, <a class='category' href='/blog/categories/phonemic-transcription/'>phonemic transcription</a>, <a class='category' href='/blog/categories/phonetics/'>phonetics</a>, <a class='category' href='/blog/categories/speech-recognition/'>speech recognition</a>, <a class='category' href='/blog/categories/word2vec/'>word2vec</a></span>
-</footer>
+<h3 id="biclusters-3">2 biclusters</h3>
 
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_2_biclusters.png" /></p>
 
-</article>
+<h3 id="biclusters-4">4 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_4_biclusters.png" /></p>
+
+<h3 id="biclusters-5">6 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_6_biclusters.png" /></p>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">syhw</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T12:17:00+02:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/biclustering/'>biclustering</a>, <a class='category' href='/blog/categories/embeddings/'>embeddings</a>, <a class='category' href='/blog/categories/gensim/'>gensim</a>, <a class='category' href='/blog/categories/phonemic-transcription/'>phonemic transcription</a>, <a class='category' href='/blog/categories/phonetics/'>phonetics</a>, <a class='category' href='/blog/categories/sklearn/'>sklearn</a>, <a class='category' href='/blog/categories/speech-recognition/'>speech recognition</a>, <a class='category' href='/blog/categories/word2vec/'>word2vec</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/blog/2014/06/20/visualizing-phn2vec-with-biclustering/" data-via="syhw" data-counturl="http://snippyhollow.github.com/blog/2014/06/20/visualizing-phn2vec-with-biclustering/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/05/27/phn2vec-embeddings/" title="Previous Post: phn2vec embeddings">&laquo; phn2vec embeddings</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

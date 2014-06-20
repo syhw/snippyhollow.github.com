@@ -4,7 +4,7 @@
   <title><![CDATA[Category: speech recognition | Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/blog/categories/speech-recognition/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-06-02T14:23:29+02:00</updated>
+  <updated>2014-06-20T14:18:38+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Visualizing phn2vec with biclustering]]></title>
+    <link href="http://snippyhollow.github.com/blog/2014/06/20/visualizing-phn2vec-with-biclustering/"/>
+    <updated>2014-06-20T12:17:00+02:00</updated>
+    <id>http://snippyhollow.github.com/blog/2014/06/20/visualizing-phn2vec-with-biclustering</id>
+    <content type="html"><![CDATA[<p>Following <a href="http://snippyhollow.github.io/blog/2014/05/27/phn2vec-embeddings/">my previous blog post on phn2vec</a>, I used <a href="http://scikit-learn.org/stable/modules/biclustering.html">scikit-learn’s biclustering</a> to make the similarity matrices more readable. So here are some quick results for TIMIT:</p>
+
+<h2 id="phonetic-annotation">Phonetic annotation</h2>
+
+<h3 id="biclusters">2 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_2_biclusters.png"></p>
+
+<h3 id="biclusters-1">4 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_4_biclusters.png"></p>
+
+<h3 id="biclusters-2">6 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_6_biclusters.png"></p>
+
+<h2 id="phonemic-transcription">Phonemic transcription</h2>
+
+<h3 id="biclusters-3">2 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phonemes_2_biclusters.png"></p>
+
+<h3 id="biclusters-4">4 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phonemes_4_biclusters.png"></p>
+
+<h3 id="biclusters-5">6 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phonemes_6_biclusters.png"></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[phn2vec embeddings]]></title>

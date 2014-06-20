@@ -9,8 +9,7 @@
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Several months ago, I started thinking in terms of embeddings for everything,
-let’s forget about discrete/categorical values and replace everything &hellip;">
+  <meta name="description" content="Following my previous blog post on phn2vec, I used scikit-learn’s biclustering to make the similarity matrices more readable. So here are some quick &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +92,71 @@ let’s forget about discrete/categorical values and replace everything &hellip;
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/20/visualizing-phn2vec-with-biclustering/">Visualizing Phn2vec With Biclustering</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T12:17:00+02:00" pubdate data-updated="true">Jun 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Following <a href="http://snippyhollow.github.io/blog/2014/05/27/phn2vec-embeddings/">my previous blog post on phn2vec</a>, I used <a href="http://scikit-learn.org/stable/modules/biclustering.html">scikit-learn’s biclustering</a> to make the similarity matrices more readable. So here are some quick results for TIMIT:</p>
+
+<h2 id="phonetic-annotation">Phonetic annotation</h2>
+
+<h3 id="biclusters">2 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_2_biclusters.png" /></p>
+
+<h3 id="biclusters-1">4 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_4_biclusters.png" /></p>
+
+<h3 id="biclusters-2">6 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phones_6_biclusters.png" /></p>
+
+<h2 id="phonemic-transcription">Phonemic transcription</h2>
+
+<h3 id="biclusters-3">2 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_2_biclusters.png" /></p>
+
+<h3 id="biclusters-4">4 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_4_biclusters.png" /></p>
+
+<h3 id="biclusters-5">6 biclusters</h3>
+
+<p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures_10dim_5window/timit_phonemes_6_biclusters.png" /></p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -533,6 +597,10 @@ P(B|A) = \frac{\sum_{C\in\{false,true\}} P(B|A,C)P(A)P(C)}{P(A)} & = P(\neg C)P(
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/06/20/visualizing-phn2vec-with-biclustering/">Visualizing phn2vec with biclustering</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/05/27/phn2vec-embeddings/">phn2vec embeddings</a>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: phonetics | Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/blog/categories/phonetics/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-06-20T14:18:38+02:00</updated>
+  <updated>2014-06-20T14:22:48+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -24,13 +24,19 @@
 
 <h3 id="biclusters">2 biclusters</h3>
 
+<p>We clearly see consonants vs. vowels.</p>
+
 <p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_2_biclusters.png"></p>
 
 <h3 id="biclusters-1">4 biclusters</h3>
 
+<p>We clearly see a separation in the place (+nasals) in the consonants. Silences get their own cluster.</p>
+
 <p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_4_biclusters.png"></p>
 
 <h3 id="biclusters-2">6 biclusters</h3>
+
+<p>Fricatives and nasals get their own clusters.</p>
 
 <p><img src="https://dl.dropboxusercontent.com/u/14035465/pictures/figures<em>10dim</em>5window/timit_phones_6_biclusters.png"></p>
 

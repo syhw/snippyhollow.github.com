@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: machinelearning, | Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/blog/categories/machinelearning-/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2014-07-17T14:54:31+02:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[syhw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Spikey Spheres]]></title>
+    <link href="http://snippyhollow.github.com/blog/2014/07/17/spikey-spheres/"/>
+    <updated>2014-07-17T14:42:00+02:00</updated>
+    <id>http://snippyhollow.github.com/blog/2014/07/17/spikey-spheres</id>
+    <content type="html"><![CDATA[<p>Just a quick blog post to say that if you didn’t read <a href="http://www.penzba.co.uk/cgi-bin/PvsNP.py?SpikeySpheres">“Spikey Spheres”</a> before, you should. And <a href="http://nbviewer.ipython.org/urls/gist.github.com/SnippyHolloW/9025964/raw/b2d266e7e19d64e0343fd899dfbc3e8ddc889269/SpikeySpheres?create=1">there is my IPython notebook that goes with it</a>. There is also <a href="http://djalil.chafai.net/blog/2013/07/14/a-cube-a-starfish-a-thin-shell-and-the-central-limit-theorem/">this connection with the central limit theorem</a> (and the $l^{\infty}$ ball).</p>
+]]></content>
+  </entry>
+  
+</feed>

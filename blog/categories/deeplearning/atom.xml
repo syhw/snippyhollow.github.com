@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: deeplearning | Exchangeable random experiments]]></title>
+  <link href="http://snippyhollow.github.com/blog/categories/deeplearning/atom.xml" rel="self"/>
+  <link href="http://snippyhollow.github.com/"/>
+  <updated>2014-08-09T15:23:34+02:00</updated>
+  <id>http://snippyhollow.github.com/</id>
+  <author>
+    <name><![CDATA[syhw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[So you wanna try Deep Learning?]]></title>
+    <link href="http://snippyhollow.github.com/blog/2014/08/09/so-you-wanna-try-deep-learning/"/>
+    <updated>2014-08-09T13:37:00+02:00</updated>
+    <id>http://snippyhollow.github.com/blog/2014/08/09/so-you-wanna-try-deep-learning</id>
+    <content type="html"><![CDATA[<p>I’m keeping this post quick and dirty, but at least it’s out there. The gist of this post is that <a href="8a0f820261926e2f41cc">I put out a one file gist that does all the basics</a>, so that you can play around with it yourself. First of all, I would say that deep learning is simply kernel machines whose kernel we learn. That’s gross but that’s not totally false. Second of all, there is nothing magical about deep learning, just that we can efficiently train (GPUs, clusters) large models (millions of weights, billions if you want to make a Wired headline) on large datasets (millions of images, thousands of hours of speech, more if you’re GOOG/FB/AAPL/MSFT/NSA). I think a good part of the success of deep learning comes from the fact that practitionners are not affraid to go around beautiful mathematical principles to have their model work on whatever dataset and whatever task. But I disgress…</p>
+
+<h2 id="what-is-a-deep-neural-network">What is a deep neural network?</h2>
+
+<p>A series of matrix multiplications and non-linearities. You take your input $x$ in your features space, multiply it by a matrix $W$ (add biases $b$), apply a non-linearity (Rectified Linear Unit is fashionable these days, that’s $max(0, output)$, but $sigmoid$ and $tanh$ are OK too) and keep on doing that with other layers until you reach a classifier. For instance, you have a 3 layers ReLUs-based neural network with a softmax classifier on top? That gives:</p>
+
+<script type="math/tex; mode=display">y = softmax(max(0, W_2.(max(0, W_1.(max(0, W_0.x + b_0))+ b_1)) + b_2))</script>
+
+<p>There are all sorts of different mammals, with very strong specificities, but I think I just described a rat (or is it an <a href="https://en.wikipedia.org/wiki/Euarchontoglires">euarchontoglires</a>?).</p>
+
+<h2 id="links-and-papers">Links and Papers</h2>
+
+<p>I’m just dumping here a collection of links that I think everybody with an interest in deep learning should at least skim:</p>
+
+<ul>
+  <li>First, you should of course start with <a href="http://deeplearning.net/tutorial/">the deeplearning.net tutorials</a>, even though it’s pretty old. Overall, these are very good foundations nevertheless.</li>
+  <li>If you want to get an intuition for <a href="http://colah.github.io/posts/2014-03-NN-Manifolds-Topology/">how NNs fold space with non-linearities</a> and <a href="http://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html">an online demo to play around with this concept</a>.</li>
+  <li>These online demos were nice, right? They’re done by a guy who also wrote a pretty interesting <a href="http://karpathy.github.io/2014/07/03/feature-learning-escapades/">personnal history that concurs with my point-of-view on feature learning</a>.</li>
+  <li>I’m going to advise you against it in a bit, but if you want to do RBM pre-training, <a href="https://www.cs.toronto.edu/~hinton/absps/guideTR.pdf">this paper is a must-read</a></li>
+  <li>If you want to do anything that has to deal with images, start <a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf">here</a> and <a href="http://arxiv.org/pdf/1311.2901.pdf">there</a>.</li>
+  <li>If you want to do anything that has to deal with speech (I assume you know about speech coding, <a href="http://i.imgur.com/fA0QIQr.png">otherwise I did a crash course</a>), start <a href="http://www.cs.utoronto.ca/~gdahl/papers/dbnPhoneRec.pdf">here</a> and <a href="http://www.csri.utoronto.ca/~hinton/absps/googlerectified.pdf">there</a>.</li>
+  <li>If you want to do NLP with deep learning, there are lots of hot papers right now, but you could start with <a href="http://leon.bottou.org/publications/pdf/jmlr-2011.pdf">NLP (almost) from scratch</a>.</li>
+  <li>In any case, you should learn <a href="http://research.microsoft.com/pubs/192769/tricks-2012.pdf">practical stuff about SGD (must-read)</a>, <a href="http://machinelearning.wustl.edu/mlpapers/paper_files/icml2013_sutskever13.pdf">learn about momentum</a>, and you can geek out about extensions (I’m fond of <a href="http://arxiv.org/pdf/1212.5701.pdf">Adadelta</a>). You should learn about <a href="http://arxiv.org/pdf/1207.0580.pdf">Dropout</a>, and maybe geek out about the variants (fast dropout, dropconnect…).</li>
+  <li>If you like videos, <a href="https://www.youtube.com/watch?v=6WeyTUnbwQQ">Optimization I</a> and <a href="http://www.youtube.com/embed/cXzGpiUcvRI?vq=hd1080&amp;autoplay=1">Leon (1)</a> <a href="http://www.youtube.com/embed/4-hTxJAwr8U?vq=hd1080&amp;autoplay=1">Bottou’s (2)</a> <a href="http://www.youtube.com/embed/adXwym8Lakg?vq=hd1080&amp;autoplay=1">MLSS class (3)</a> are good introductions.</li>
+  <li>Finally, if you want more, you can have a look at my <a href="https://pinboard.in/search/u:syhw?query=deeplearning">non-extensive collection of links on deep learning</a>. </li>
+</ul>
+
+<h2 id="stuff-youll-learn">Stuff you’ll learn</h2>
+
+<p>There I’m getting totally subjective, because I’m telling you stuff that I learned the hard way.</p>
+
+<h4 id="generic">Generic</h4>
+
+<ul>
+  <li>Always answer “Do you want more data?” with “Yes, please.”</li>
+  <li>If something feels wrong, check your gradients with finite differences.</li>
+  <li>For all gradient descent related stuff, first <a href="http://research.microsoft.com/pubs/192769/tricks-2012.pdf">RTFM</a>.</li>
+  <li>When do we stop the training? Almost everybody does it but nobody speaks about it: <a href="https://en.wikipedia.org/wiki/Early_stopping">early stopping on a validation set</a>.</li>
+  <li>If you use $tanh$ or $sigmoid$ activation units, <a href="http://machinelearning.wustl.edu/mlpapers/paper_files/AISTATS2010_GlorotB10.pdf">initialize them well</a>, respectively with uniform weights in <script type="math/tex">[-\sqrt{\frac{6}{\mathrm{fan}_{in} + \mathrm{fan}_{out}}}, \sqrt{\frac{6}{\mathrm{fan}_{in} + \mathrm{fan}_{out}}}]</script> or $4$ times that.</li>
+</ul>
+
+<h4 id="unsupervised-pre-training">Unsupervised Pre-Training</h4>
+
+<ul>
+  <li>“What is unsupervised pre-training?” Using un-annotated data to initialize the network’s </li>
+  <li>What is unsupervised pre-training doing? <a href="http://jmlr.org/papers/volume11/erhan10a/erhan10a.pdf">“unsupervised pre-training guides the learning towards basins of attraction of minima that are better in terms of the underlying data distribution; the evidence from these results supports a regularization explanation for the effect of pre-training.”</a></li>
+  <li>This is not needed if you have enough data.</li>
+</ul>
+
+<h4 id="dropout">Dropout</h4>
+
+<ul>
+  <li>“How do we approach a problem with the deep learning mindset?” You design an under-constrained over-capacity over-fitting hog (by being deep and wide, just barely tractable efficiently on your hardware), and you keep it in check by using Dropout.</li>
+  <li>“What is Dropout?” Dropping hidden units randomly (usually with a binomial probability of 0.5) during training so that the networks learns to be “robust” and doesn’t learn stupid co-activations of units (a way to tell the network to not just learn to compress the training set).</li>
+  <li>“What is Dropout doing exactly?” <a href="http://papers.nips.cc/paper/4882-dropout-training-as-adaptive-regularization.pdf">“the dropout regularizer is first-order equivalent to an L2 regularizer applied after scaling the features by an estimate of the inverse diagonal Fisher information matrix”</a>, <a href="http://papers.nips.cc/paper/4878-understanding-dropout.pdf">“Dropout performs gradient descent on-line with respect to both the training examples and the ensemble of all possible subnetworks. (…) The regularization term is the usual weight decay or Gaussian prior term based on the square of the weights to prevent overfitting. Dropout provides immediately the magnitude of the regularization term which is scaled by the inputs and by the variance of the dropout variables.”</a></li>
+  <li>“Sorry, what?” You know about <a href="https://en.wikipedia.org/wiki/Tikhonov_regularization">L2 regularization</a> right? So you know about <a href="http://ej.iop.org/images/1741-2552/9/5/056002/Full/jne427232f9_online.jpg">this picture</a>, where regularization means inflating the L2 (or L1) ball until it intersects your feasible set. Now imagine an ellipsis that has its moments matching the ones of the inverse of the Fisher information matrix of the data. You now have a picture of “kinda” what Dropout is doing.</li>
+</ul>
+
+<h2 id="practice">Practice</h2>
+
+<p>I’d advise to start by using either <a href="http://torch.ch/">Torch</a> (Lua) or <a href="http://deeplearning.net/software/theano/">Theano</a> (Python), both nice libraries that do automatic differentiation.</p>
+
+<p>I put together a <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc">single file simple deep neural network working on small datasets (Python)</a>, more for pedagogical purposes than production ready, but it runs relatively fast on GPUs thanks to Theano. So if you want to run it, install Theano (I use the <a href="http://deeplearning.net/software/theano/install.html#bleeding-edge-install-instructions">bleeding edge</a>). If you want to play around with it, look for <code>TODO</code> in the code and change values there. <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc#file-dnn-py-L567-L573">There are several datasets</a> that you can use. Also, you should play around with the parameters of <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc#file-dnn-py-L575-L577">this function</a>, and maybe try against the SVMs from scikit-learn. Finally, if you use Dropout, you will see improvement only on large-enough networks (&gt; 1000 units / layer, &gt; 3-4 layers). Here is the result on running this file (<code>python dnn.py</code>) with a small ($784\times200\times200\times10$) ReLU-based L2-regularized network on MNIST:</p>
+
+<p><img src="http://i.imgur.com/M3COTRE.png"></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I didn’t talk about convolutional neural networks, nor recurrent neural networks, nor other beasts. That should be the next step for the passionate reader. This was just a primer on raw facts for basic deep learning. Depending on what people want, I can either explain function by function the file that I provided here, talk about different loss functions (learning embeddings, e.g. as <a href="https://code.google.com/p/word2vec/">word2vec</a>), recurrent neural nets, etc.</p>
+
+]]></content>
+  </entry>
+  
+</feed>

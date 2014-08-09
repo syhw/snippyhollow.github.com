@@ -64,6 +64,8 @@ I put together a [single file simple deep neural network working on small datase
 
 {% img http://i.imgur.com/M3COTRE.png %}
 
+If your GPU can handle it, you want to try Dropout on MNIST with 4 (or more) layers of 2000 units. ;-)
+
 ## Conclusion
 
 I didn't talk about convolutional neural networks, nor recurrent neural networks, nor other beasts. That should be the next step for the passionate reader. This was just a primer on raw facts for basic deep learning. Depending on what people want, I can either explain function by function the file that I provided here, talk about different loss functions (learning embeddings, e.g. as [word2vec](https://code.google.com/p/word2vec/)), recurrent neural nets, etc.

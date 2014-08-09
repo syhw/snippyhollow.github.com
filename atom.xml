@@ -4,7 +4,7 @@
   <title><![CDATA[Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-08-09T15:31:37+02:00</updated>
+  <updated>2014-08-09T16:56:48+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -18,7 +18,7 @@
     <link href="http://snippyhollow.github.com/blog/2014/08/09/so-you-wanna-try-deep-learning/"/>
     <updated>2014-08-09T13:37:00+02:00</updated>
     <id>http://snippyhollow.github.com/blog/2014/08/09/so-you-wanna-try-deep-learning</id>
-    <content type="html"><![CDATA[<p>I’m keeping this post quick and dirty, but at least it’s out there. The gist of this post is that <a href="8a0f820261926e2f41cc">I put out a one file gist that does all the basics</a>, so that you can play around with it yourself. First of all, I would say that deep learning is simply kernel machines whose kernel we learn. That’s gross but that’s not totally false. Second of all, there is nothing magical about deep learning, just that we can efficiently train (GPUs, clusters) large models (millions of weights, billions if you want to make a Wired headline) on large datasets (millions of images, thousands of hours of speech, more if you’re GOOG/FB/AAPL/MSFT/NSA). I think a good part of the success of deep learning comes from the fact that practitionners are not affraid to go around beautiful mathematical principles to have their model work on whatever dataset and whatever task. But I disgress…</p>
+    <content type="html"><![CDATA[<p>I’m keeping this post quick and dirty, but at least it’s out there. The gist of this post is that <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc">I put out a one file gist that does all the basics</a>, so that you can play around with it yourself. First of all, I would say that deep learning is simply kernel machines whose kernel we learn. That’s gross but that’s not totally false. Second of all, there is nothing magical about deep learning, just that we can efficiently train (GPUs, clusters) large models (millions of weights, billions if you want to make a Wired headline) on large datasets (millions of images, thousands of hours of speech, more if you’re GOOG/FB/AAPL/MSFT/NSA). I think a good part of the success of deep learning comes from the fact that practitionners are not affraid to go around beautiful mathematical principles to have their model work on whatever dataset and whatever task. But I disgress…</p>
 
 <h2 id="what-is-a-deep-neural-network">What is a deep neural network?</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: machinelearning | Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/blog/categories/machinelearning/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-08-09T15:23:34+02:00</updated>
+  <updated>2014-08-09T15:31:37+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -83,6 +83,8 @@
 <p>I put together a <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc">single file simple deep neural network working on small datasets (Python)</a>, more for pedagogical purposes than production ready, but it runs relatively fast on GPUs thanks to Theano. So if you want to run it, install Theano (I use the <a href="http://deeplearning.net/software/theano/install.html#bleeding-edge-install-instructions">bleeding edge</a>). If you want to play around with it, look for <code>TODO</code> in the code and change values there. <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc#file-dnn-py-L567-L573">There are several datasets</a> that you can use. Also, you should play around with the parameters of <a href="https://gist.github.com/SnippyHolloW/8a0f820261926e2f41cc#file-dnn-py-L575-L577">this function</a>, and maybe try against the SVMs from scikit-learn. Finally, if you use Dropout, you will see improvement only on large-enough networks (&gt; 1000 units / layer, &gt; 3-4 layers). Here is the result on running this file (<code>python dnn.py</code>) with a small ($784\times200\times200\times10$) ReLU-based L2-regularized network on MNIST:</p>
 
 <p><img src="http://i.imgur.com/M3COTRE.png"></p>
+
+<p>If your GPU can handle it, you want to try Dropout on MNIST with 4 (or more) layers of 2000 units. ;-)</p>
 
 <h2 id="conclusion">Conclusion</h2>
 

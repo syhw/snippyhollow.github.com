@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ssh basics - Exchangeable random experiments</title>
+  <title>Category: ASR - Exchangeable random experiments</title>
   <meta name="author" content="syhw">
 
   
-  <meta name="description" content="Ssh Basics Apr 17th, 2013 Public key authentication You can easily generate a private/public key pair by typing: ssh-keygen -t rsa If you do not set &hellip;">
+  <meta name="description" content="Category: ASR">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://snippyhollow.github.com/ssh-basics/">
+  <link rel="canonical" href="http://snippyhollow.github.com/blog/categories/asr/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -94,99 +94,31 @@
 <article role="article">
   
   <header>
-    <h1 class="entry-title">Ssh Basics</h1>
-    <p class="meta">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-17T12:08:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time></p>
+    <h1 class="entry-title">Category: ASR</h1>
+    
   </header>
   
-  <h3 id="public-key-authentication">Public key authentication</h3>
-
-<p>You can easily generate a private/public key pair by typing:</p>
-
-<pre><code>ssh-keygen -t rsa
-</code></pre>
-
-<p>If you do not set a passphrase during the generation, you will be able to 
-login without having to type a password. How so? You have to copy the content 
-of <code>~/.ssh/id_rsa.pub</code> (<code>~</code> meaning your home folder) on the other machine you 
-want to log to in <code>~/.ssh/authorized_keys</code> (by default). 
-Say you are on machine <code>A</code> and log on to <code>B</code>, do the 
-<code>ssh-keygen</code> command above on machine <code>A</code> and put the public key (ending in 
-<code>.pub</code>) on machine <code>B</code>. WARNING: you should <em>never</em> let the private key (the 
-one not ending in <code>.pub</code>) leave machine <code>A</code>. You can put the public key where 
-ever you want (even on public internet sites). There is a command to directly 
-copy the public key and set the right files authorizations for you:</p>
-
-<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub remote-host
-</code></pre>
-
-<p>With remote-host being how you login to machine <code>B</code>. What? You are still 
-loging in often to the same machine by typing <code>ssh username@ipaddress</code>?</p>
-
-<h3 id="ssh-config">SSH config</h3>
-
-<p>So with public key authentication, you are way safer than using a password 
-(which is easier to crack than 8 letters alpha-numeric passwords). Now for the 
-easiness of use, the ssh client (on machine <code>A</code>) uses a config file, 
-whose default path is <code>.ssh/config</code>. You can put all the servers you log to 
-inside like that (one <code>Host=</code> and its following paragraph per server):</p>
-
-<pre><code>Host=habilis
-Hostname=HABILIS_IP_HERE
-User=MY_USER_ON_HABILIS_HERE
-IdentityFile=~/.ssh/habilis 
-</code></pre>
-
-<p>The last line is optional and is used because I use a specific ssh 
-private/public keypair for habilis. The path to the key that you should put 
-here is for the <em>private</em> key (on machine <code>A</code>).</p>
-
-
-  
-    <footer>
-      <p class="meta">
-        
-        
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2014</h2>
+
+<article>
+  
+<h1><a href="/blog/2014/09/25/classical-speech-recognition-features-in-one-picture/">Classic speech recognition features in one picture</a></h1>
+<time datetime="2014-09-25T16:18:00+02:00" pubdate><span class='month'>Sep</span> <span class='day'>25</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/asr/'>ASR</a>, <a class='category' href='/blog/categories/audio-features/'>audio features</a>, <a class='category' href='/blog/categories/machinelearning/'>machinelearning</a>, <a class='category' href='/blog/categories/speech-recognition/'>speech recognition</a></span>
+</footer>
 
 
-<time datetime="2013-04-17T12:08:00+02:00" pubdate data-updated="true">Apr 17<span>th</span>, 2013</time>
-        
-      </p>
-      
-        <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://snippyhollow.github.com/ssh-basics/index.html" data-via="syhw" data-counturl="http://snippyhollow.github.com/ssh-basics/index.html" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+</article>
+
 </div>
 
-      
-    </footer>
   
 </article>
 

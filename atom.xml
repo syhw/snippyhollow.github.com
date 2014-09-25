@@ -4,7 +4,7 @@
   <title><![CDATA[Exchangeable random experiments]]></title>
   <link href="http://snippyhollow.github.com/atom.xml" rel="self"/>
   <link href="http://snippyhollow.github.com/"/>
-  <updated>2014-08-09T16:56:48+02:00</updated>
+  <updated>2014-09-25T16:38:03+02:00</updated>
   <id>http://snippyhollow.github.com/</id>
   <author>
     <name><![CDATA[syhw]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Classic speech recognition features in one picture]]></title>
+    <link href="http://snippyhollow.github.com/blog/2014/09/25/classical-speech-recognition-features-in-one-picture/"/>
+    <updated>2014-09-25T16:18:00+02:00</updated>
+    <id>http://snippyhollow.github.com/blog/2014/09/25/classical-speech-recognition-features-in-one-picture</id>
+    <content type="html"><![CDATA[<p>Quite some time ago (when I was coding some of this myself for educational purposes), I made a diagram of the succesive transformations that are applied to “raw” (wave files) audio for a classic speech recognition pipeline. I think sharing it would be interesting to some of you, pay close attention to the X-axis labels, and you shouldn’t get lost!</p>
+
+<p><img src="http://i.imgur.com/GcTIM7m.png" /></p>
+
+<p>Useful links for neophytes:</p>
+
+<ul>
+  <li><a href="http://en.wikipedia.org/wiki/Short-time_Fourier_transform">STFT</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Window_function#Generalized_Hamming_windows">Hamming windows</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Spectral_density">Spectral density</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Filter_bank">Filterbank</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Mel_scale">Mel scale</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Discrete_cosine_transform">DCT</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[So you wanna try Deep Learning?]]></title>

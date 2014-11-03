@@ -41,12 +41,18 @@
         <lastmod>2014-09-25T16:37:06+02:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://snippyhollow.github.com/blog/2014/11/03/from-logistic-regression-to-backprop-and-beyond/
+        </loc>
+        <lastmod>2014-11-03T16:50:38+01:00</lastmod>
+    </url>
+    <url>
         <loc>http://snippyhollow.github.com/about/</loc>
         <lastmod>2014-06-02T14:23:23+02:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/blog/archives/</loc>
-        <lastmod>2014-09-25T16:37:06+02:00</lastmod>
+        <lastmod>2014-11-03T16:50:38+01:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/git-and-gitolite/</loc>
@@ -58,7 +64,7 @@
     </url>
     <url>
         <loc>http://snippyhollow.github.com/</loc>
-        <lastmod>2014-09-25T16:37:06+02:00</lastmod>
+        <lastmod>2014-11-03T16:50:38+01:00</lastmod>
     </url>
     <url>
         <loc>http://snippyhollow.github.com/mathematics-in-pictures/</loc>
